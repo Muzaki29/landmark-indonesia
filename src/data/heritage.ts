@@ -473,6 +473,42 @@ export function getProvince(id: string) {
   return provinces.find((province) => province.id === id) ?? provinces[0]
 }
 
+let indonesianProvinces: Province[] | undefined
+
+export function getProvinces(locale: Locale) {
+  if (locale === 'en') return provinces
+  if (indonesianProvinces) return indonesianProvinces
+  indonesianProvinces = provinces.map((province) => {
+    const copy = indonesianLandmarkCopy[province.landmark.slug]
+    const item = (id: string) => copy.items[id] ?? {}
+    const landmark: Landmark = {
+      ...province.landmark,
+      location: copy.location,
+      type: copy.type,
+      shortDescription: copy.shortDescription,
+      modelNote: copy.modelNote,
+      history: province.landmark.history.map((entry) => ({ ...entry, text: item(entry.id).text ?? entry.text })),
+      architecture: province.landmark.architecture.map((entry) => ({ ...entry, text: item(entry.id).text ?? entry.text })),
+      culturalContext: province.landmark.culturalContext.map((entry) => ({ ...entry, text: item(entry.id).text ?? entry.text })),
+      timeline: province.landmark.timeline.map((entry) => ({ ...entry, title: item(entry.id).title ?? entry.title, text: item(entry.id).text ?? entry.text })),
+      facts: province.landmark.facts.map((entry) => ({ ...entry, label: item(entry.id).label ?? entry.label, value: item(entry.id).value ?? entry.value })),
+      heritageStatus: province.landmark.heritageStatus && { ...province.landmark.heritageStatus, value: copy.heritageStatus ?? province.landmark.heritageStatus.value },
+      hotspots: province.landmark.hotspots.map((entry) => ({ ...entry, title: item(entry.id).title ?? entry.title, summary: item(entry.id).summary ?? entry.summary })),
+      relations: province.landmark.relations.map((entry) => ({ ...entry, title: item(entry.id).title ?? entry.title, summary: item(entry.id).summary ?? entry.summary })),
+      comparison: Object.fromEntries(Object.entries(province.landmark.comparison).map(([key, value]) => [key, value && { ...value, value: copy.comparison[key] ?? value.value }])),
+      cameraViews: province.landmark.cameraViews.map((view) => ({ ...view, label: view.id === 'front' ? 'Depan' : view.id === 'side' ? 'Samping' : view.id === 'eye-level' ? 'Setinggi mata' : view.label })),
+    }
+    const provinceCopy = indonesianProvinceCopy[province.id]
+    return { ...province, ...provinceCopy, landmark }
+  })
+  return indonesianProvinces
+}
+
+export function getLocalizedProvince(id: string, locale: Locale) {
+  const collection = getProvinces(locale)
+  return collection.find((province) => province.id === id) ?? collection[0]
+}
+
 export function getClaims(landmark: Landmark): Claim[] {
   const locationSourceId = landmark.slug === 'monas'
     ? nationalHeritageMonasSource.id
@@ -520,4 +556,25 @@ export const comparisonLabels: Record<string, string> = {
   architecturalForm: 'Architectural form',
   materials: 'Materials',
   heritageStatus: 'Heritage status',
+}
+import { indonesianLandmarkCopy, indonesianProvinceCopy, indonesianReadingScopes } from './heritage.id'
+import type { Locale } from '../i18n'
+
+
+export function getComparisonLabels(locale: Locale) {
+  if (locale === 'en') return comparisonLabels
+  return {
+    period: 'Periode',
+    originalFunction: 'Fungsi awal',
+    currentFunction: 'Fungsi saat ini',
+    dimensions: 'Dimensi',
+    architecturalForm: 'Bentuk arsitektural',
+    materials: 'Material',
+    heritageStatus: 'Status cagar budaya',
+  }
+}
+
+export function getFurtherReadings(locale: Locale) {
+  if (locale === 'en') return furtherReadings
+  return furtherReadings.map((reading) => ({ ...reading, scope: indonesianReadingScopes[reading.id] ?? reading.scope }))
 }

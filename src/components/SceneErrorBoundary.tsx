@@ -3,6 +3,7 @@ import { ViewerFallback } from './ViewerFallback'
 
 interface Props {
   children: ReactNode
+  fallback?: ReactNode
 }
 
 interface State {
@@ -21,6 +22,6 @@ export class SceneErrorBoundary extends Component<Props, State> {
   }
 
   render() {
-    return this.state.failed ? <ViewerFallback /> : this.props.children
+    return this.state.failed ? (this.props.fallback ?? <ViewerFallback />) : this.props.children
   }
 }

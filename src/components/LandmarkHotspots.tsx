@@ -1,12 +1,13 @@
 import { Html } from '@react-three/drei'
 import type { Hotspot } from '../data/heritage'
 
-export function LandmarkHotspots({ hotspots, activeId, visible, labels, onSelect }: {
+export function LandmarkHotspots({ hotspots, activeId, visible, labels, onSelect, focusLabel }: {
   hotspots: Hotspot[]
   activeId?: string | null
   visible: boolean
   labels: boolean
   onSelect: (id: string) => void
+  focusLabel: string
 }) {
   if (!visible) return null
   return <group name="Architectural hotspots">{hotspots.map((hotspot, index) => (
@@ -16,7 +17,7 @@ export function LandmarkHotspots({ hotspots, activeId, visible, labels, onSelect
         <meshBasicMaterial color={activeId === hotspot.id ? '#fff0ba' : '#d7ad5b'} transparent opacity={0.88} depthTest={false} />
       </mesh>
       <Html center distanceFactor={9} zIndexRange={[12, 0]}>
-        <button className={activeId === hotspot.id ? 'hotspot-marker hotspot-marker--active' : 'hotspot-marker'} type="button" onClick={(event) => { event.stopPropagation(); onSelect(hotspot.id) }} aria-label={`Focus ${hotspot.title}`}>
+        <button className={activeId === hotspot.id ? 'hotspot-marker hotspot-marker--active' : 'hotspot-marker'} type="button" onClick={(event) => { event.stopPropagation(); onSelect(hotspot.id) }} aria-label={`${focusLabel} ${hotspot.title}`}>
           <span>{String(index + 1).padStart(2, '0')}</span>{labels && <strong>{hotspot.title}</strong>}
         </button>
       </Html>

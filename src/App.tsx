@@ -1,12 +1,14 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { ClaimSources, CollectionNavigator, ExploreModes, HelpPanel, HotspotCard, InformationPanel, PrimaryNav, ProvinceNavigator, SectionNavigation, ViewerControls, ViewerToolbar } from './components/ExperiencePanels'
 import { LandmarkExperience } from './components/LandmarkExperience'
-import { getProvince, provinces, type CameraView } from './data/heritage'
+import { getLocalizedProvince, getProvinces, type CameraView } from './data/heritage'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import { useI18n, type Locale } from './i18n'
 import { experienceReducer, initialExperienceState, landmarkSections, type ExperiencePanel, type ExploreMode, type LandmarkSection } from './state/experienceState'
 import type { ViewerCommand } from './scenes/CameraControls'
 
 export default function App() {
+  const { locale, setLocale, t } = useI18n()
   const [entered, setEntered] = useState(false)
   const [state, dispatch] = useReducer(experienceReducer, initialExperienceState)
   const [ready, setReady] = useState(false)
@@ -22,7 +24,8 @@ export default function App() {
   const [fullscreen, setFullscreen] = useState(false)
   const experienceRef = useRef<HTMLElement>(null)
   const reducedMotion = useReducedMotion()
-  const province = getProvince(state.provinceId)
+  const provinces = getProvinces(locale)
+  const province = getLocalizedProvince(state.provinceId, locale)
   const landmark = province.landmark
   const sceneReady = ready
   const activeSection = landmarkSections.find(({ id }) => id === state.panel)?.id ?? 'overview'
@@ -30,8 +33,8 @@ export default function App() {
   const cameraView = landmark.cameraViews.find(({ id }) => id === cameraViewId) ?? landmark.cameraViews[0]
 
   useEffect(() => {
-    document.title = `${landmark.name} · Indonesia 3D Landmarks`
-  }, [landmark.name])
+    document.title = `${landmark.name} · ${t('interactiveHeritage').replace('\n', ' ')}`
+  }, [landmark.name, t])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -124,12 +127,13 @@ export default function App() {
   if (!entered) {
     return (
       <main className="landing" data-reduced-motion={reducedMotion}>
+        <LanguageSelector locale={locale} onLocale={setLocale} className="landing-language" />
         <div className="landing-index" aria-hidden="true"><span>01</span><span>02</span><span>03</span></div>
         <div className="landing-content">
           <p>Indonesia</p>
-          <h1>Interactive<br />3D Heritage</h1>
-          <p>Three landmarks. Three provincial stories. One source-backed digital exhibition.</p>
-          <button type="button" onClick={() => setEntered(true)}>Explore Indonesia <span aria-hidden="true">→</span></button>
+          <h1>{t('interactiveHeritage').split('\n').map((line, index) => <span key={line}>{index > 0 && <br />}{line}</span>)}</h1>
+          <p>{t('landingSummary')}</p>
+          <button type="button" onClick={() => setEntered(true)}>{t('exploreIndonesia')} <span aria-hidden="true">→</span></button>
         </div>
         <footer className="landing-footer"><span>Jakarta</span><span>Yogyakarta</span><span>Sumatera Barat</span></footer>
       </main>
@@ -143,7 +147,7 @@ export default function App() {
       <header className="brand-header">
         <img src="/images/nusantara-brand-horizontal.webp" alt="Indonesia — Warisan Budaya Nusantara" />
         <PrimaryNav active={state.panel} onOpen={openPanel} />
-        <span className="locale-badge" aria-label="Language: Indonesian"><i aria-hidden="true" />ID</span>
+        <LanguageSelector locale={locale} onLocale={setLocale} />
       </header>
 
       <section className="identity" aria-label={`${landmark.name} introduction`}>
@@ -156,19 +160,19 @@ export default function App() {
           {landmark.facts.slice(0, 3).map((fact) => <div key={fact.id}><dd>{fact.value}</dd><dt>{fact.label}</dt></div>)}
         </dl>
         <button className="explore-cta" type="button" aria-pressed={exploring} onClick={toggleExploration}>
-          {exploring ? 'View introduction' : `Explore ${landmark.shortName}`} <span aria-hidden="true">→</span>
+          {exploring ? t('viewIntroduction') : `${t('explore')} ${landmark.shortName}`} <span aria-hidden="true">→</span>
         </button>
       </section>
 
       <SectionNavigation active={activeSection} onOpen={openPanel} />
       {exploring && <ExploreModes mode={mode} onMode={selectMode} />}
-      {exploring && <button className="global-evidence-toggle" type="button" aria-pressed={evidenceMode} onClick={() => setEvidenceMode((value) => !value)}>{evidenceMode ? 'Sources on' : 'Show sources'}</button>}
+      {exploring && <button className="global-evidence-toggle" type="button" aria-pressed={evidenceMode} onClick={() => setEvidenceMode((value) => !value)}>{evidenceMode ? t('sourcesOn') : t('showSourcesShort')}</button>}
       {exploring && <ViewerControls views={landmark.cameraViews} activeView={cameraViewId} labels={labels} onView={selectCameraView} onLabels={() => setLabels((value) => !value)} onReset={resetView} />}
-      <button className="story-trigger" type="button" onClick={() => openPanel('overview')}>Explore story <span aria-hidden="true">＋</span></button>
+      <button className="story-trigger" type="button" onClick={() => openPanel('overview')}>{t('exploreStory')} <span aria-hidden="true">＋</span></button>
 
-      <div className="controls" aria-label="3D viewer controls">
-        <p className="hint"><span aria-hidden="true">☝</span><span className="hint-desktop">Drag to rotate · Scroll to zoom</span><span className="hint-mobile">Drag to rotate · Pinch to zoom</span></p>
-        <button type="button" onClick={resetView} aria-label="Reset camera view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.6 9A8 8 0 1 1 4 13M4.6 9V4.8M4.6 9h4.2" /></svg>Reset view</button>
+      <div className="controls" aria-label={t('viewerToolbar')}>
+        <p className="hint"><span aria-hidden="true">☝</span><span className="hint-desktop">{t('dragRotate')}</span><span className="hint-mobile">{t('dragPinch')}</span></p>
+        <button type="button" onClick={resetView} aria-label={t('resetCamera')}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.6 9A8 8 0 1 1 4 13M4.6 9V4.8M4.6 9h4.2" /></svg>{t('resetView')}</button>
       </div>
 
       {exploring && <ViewerToolbar fullscreen={fullscreen} onHelp={() => setHelpOpen(true)} onZoomIn={() => sendViewerCommand('zoom-in')} onZoomOut={() => sendViewerCommand('zoom-out')} onFit={resetView} onFullscreen={toggleFullscreen} />}
@@ -183,10 +187,15 @@ export default function App() {
 
       <div className={`loading ${ready ? 'loading--hidden' : ''}`} role="status" aria-live="polite">
         <img src="/images/nusantara-brand-horizontal.webp" alt="" />
-        <span>Landmark {province.code}</span>
+        <span>{t('landmark')} {province.code}</span>
         <strong>{landmark.shortName}</strong>
-        <p>Preparing the miniature</p>
+        <p>{t('preparingMiniature')}</p>
       </div>
     </main>
   )
+}
+
+function LanguageSelector({ locale, onLocale, className = '' }: { locale: Locale; onLocale: (locale: Locale) => void; className?: string }) {
+  const { t } = useI18n()
+  return <div className={`locale-switch ${className}`} role="group" aria-label={t('language')}>{(['id', 'en'] as const).map((item) => <button key={item} type="button" aria-pressed={locale === item} onClick={() => onLocale(item)}>{item.toUpperCase()}</button>)}</div>
 }

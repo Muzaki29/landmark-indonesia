@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { furtherReadings, getClaims, getSourcesForClaims, provinces, searchLandmarks } from './heritage'
+import { furtherReadings, getClaims, getFurtherReadings, getProvinces, getSourcesForClaims, provinces, searchLandmarks } from './heritage'
+import { indonesianLandmarkCopy } from './heritage.id'
 
 describe('heritage collection data', () => {
   it('contains exactly three landmark provinces', () => {
@@ -32,5 +33,19 @@ describe('heritage collection data', () => {
     expect(searchLandmarks('Bukittinggi').map(({ landmark }) => landmark.slug)).toEqual(['jam-gadang'])
     expect(searchLandmarks('obelisk').map(({ landmark }) => landmark.slug)).toEqual(['monas'])
     expect(searchLandmarks('not in collection')).toEqual([])
+  })
+
+  it('keeps Indonesian content complete and attached to the same evidence', () => {
+    const localized = getProvinces('id')
+    for (const [index, province] of provinces.entries()) {
+      const landmark = province.landmark
+      const copy = indonesianLandmarkCopy[landmark.slug]
+      const requiredIds = [...landmark.history, ...landmark.architecture, ...landmark.culturalContext, ...landmark.timeline, ...landmark.facts, ...landmark.hotspots, ...landmark.relations].map(({ id }) => id)
+      expect(requiredIds.every((id) => copy.items[id])).toBe(true)
+      expect(Object.keys(landmark.comparison).every((key) => copy.comparison[key])).toBe(true)
+      expect(getClaims(localized[index].landmark).map(({ id, sourceIds }) => ({ id, sourceIds }))).toEqual(getClaims(landmark).map(({ id, sourceIds }) => ({ id, sourceIds })))
+    }
+    expect(searchLandmarks('menara jam', localized).map(({ landmark }) => landmark.slug)).toEqual(['jam-gadang'])
+    expect(getFurtherReadings('id').find(({ id }) => id.startsWith('prijotomo'))?.scope).toContain('Belum diverifikasi')
   })
 })
