@@ -5,3 +5,5 @@ test-results
 *.log
 *.tsbuildinfo
 artifacts
+__pycache__/
+*.py[cod]

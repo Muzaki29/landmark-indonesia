@@ -21,7 +21,7 @@ export default function LandmarkScene({ onReady, resetNonce, focus, cameraView, 
       <fog attach="fog" args={['#766445', 25, 48]} />
       <Lighting />
       <DioramaEnvironment />
-      <Monument />
+      <group name="inspection-subject"><Monument /></group>
       <ContactShadows position={[0, 0.01, 0]} opacity={0.54} scale={18} blur={2.5} far={15} frames={1} color="#111813" />
       <CameraControls landmark="monas" resetNonce={resetNonce} focus={focus} cameraView={cameraView} command={command} />
       <SceneTelemetry landmark="monas" onReady={onReady} />

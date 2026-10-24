@@ -7,7 +7,7 @@ const messages = {
   en: {
     explore: 'Explore', about: 'About', sources: 'Sources', support: 'Support', exploreIndonesia: 'Explore Indonesia', interactiveHeritage: 'Interactive\n3D Heritage',
     landingSummary: 'Three landmarks. Three provincial stories. One source-backed digital exhibition.', language: 'Language', primary: 'Primary navigation',
-    overview: 'Overview', history: 'History', architecture: 'Architecture', timeline: 'Timeline', culturalContext: 'Cultural Context', connectedHeritage: 'Connected Heritage',
+    overview: 'Overview', history: 'History', architecture: 'Architecture', timeline: 'Timeline', culturalContext: 'Cultural Context', connectedHeritage: 'Connected Heritage', archive: 'Archive',
     exploreMode: 'Explore', architectureMode: 'Architecture', historyMode: 'History', explorationMode: '3D exploration mode',
     view: 'View', inspectionControls: '3D inspection controls', labels: 'Labels', resetView: 'Reset view', viewerToolbar: '3D viewer toolbar',
     help: 'Help', zoomIn: 'Zoom in', zoomOut: 'Zoom out', fitView: 'Fit view', fullscreen: 'Fullscreen', exitFullscreen: 'Exit fullscreen',
@@ -37,11 +37,17 @@ const messages = {
     resetCamera: 'Reset camera view', showSourcesShort: 'Show sources', sourcesOn: 'Sources on', preparingMiniature: 'Preparing the miniature', landmark: 'Landmark',
     viewUnavailable: '3D view unavailable', viewUnavailableBody: 'Your browser could not start the WebGL scene. Try updating the browser or enabling hardware acceleration.', interactiveMiniature: 'Interactive 3D miniature of', focus: 'Focus',
     period: 'Period', originalFunction: 'Original function', currentFunction: 'Current function', dimensions: 'Dimensions', architecturalForm: 'Architectural form', materials: 'Materials', form: 'Form', structure: 'Structure', material: 'Material', function: 'Function', symbolism: 'Symbolism',
+    inspection3d: '3D Inspection', inspectionMenu: '3D inspection menu', normalView: 'Explore', xray: 'X-Ray', sectionCut: 'Section Cut', blueprint: 'Blueprint',
+    available: 'Available', limited: 'Limited', unavailable: 'Unavailable', sectionAxis: 'Section axis', position: 'Position', exteriorStudy: 'Exterior study',
+    blueprintStudy: '3D Model Study', documentedBlueprint: 'Documented Drawing', modelStudyNotice: 'This visualization is derived from the interpretive 3D model and is not an original architectural drawing.',
+    front: 'Front', side: 'Side', top: 'Top', archiveIntro: 'Traceable documentary material linked to this landmark and its evidence.',
+    yearDate: 'Year / date', creator: 'Creator', institution: 'Institution', descriptionCaption: 'Description / caption', licenseRights: 'License / rights', verification: 'Verification', relatedClaims: 'Related claims',
+    openOriginalSource: 'Open original source', externalReferenceOnly: 'External reference only', share: 'Share', copyLink: 'Copy link', linkCopied: 'Link copied', shareUnavailable: 'Unable to share this link',
   },
   id: {
     explore: 'Jelajahi', about: 'Tentang', sources: 'Sumber', support: 'Dukung', exploreIndonesia: 'Jelajahi Indonesia', interactiveHeritage: 'Warisan 3D\nInteraktif',
     landingSummary: 'Tiga landmark. Tiga cerita daerah. Satu pameran digital berbasis sumber.', language: 'Bahasa', primary: 'Navigasi utama',
-    overview: 'Ikhtisar', history: 'Sejarah', architecture: 'Arsitektur', timeline: 'Linimasa', culturalContext: 'Konteks Budaya', connectedHeritage: 'Keterkaitan Warisan',
+    overview: 'Ikhtisar', history: 'Sejarah', architecture: 'Arsitektur', timeline: 'Linimasa', culturalContext: 'Konteks Budaya', connectedHeritage: 'Keterkaitan Warisan', archive: 'Arsip',
     exploreMode: 'Jelajahi', architectureMode: 'Arsitektur', historyMode: 'Sejarah', explorationMode: 'Mode penjelajahan 3D',
     view: 'Sudut Pandang', inspectionControls: 'Kontrol pemeriksaan 3D', labels: 'Label', resetView: 'Atur ulang', viewerToolbar: 'Bilah alat penampil 3D',
     help: 'Bantuan', zoomIn: 'Perbesar', zoomOut: 'Perkecil', fitView: 'Sesuaikan tampilan', fullscreen: 'Layar penuh', exitFullscreen: 'Keluar layar penuh',
@@ -71,6 +77,12 @@ const messages = {
     resetCamera: 'Atur ulang kamera', showSourcesShort: 'Tampilkan sumber', sourcesOn: 'Sumber aktif', preparingMiniature: 'Menyiapkan miniatur', landmark: 'Landmark',
     viewUnavailable: 'Tampilan 3D tidak tersedia', viewUnavailableBody: 'Peramban tidak dapat menjalankan adegan WebGL. Coba perbarui peramban atau aktifkan akselerasi perangkat keras.', interactiveMiniature: 'Miniatur 3D interaktif', focus: 'Fokuskan',
     period: 'Periode', originalFunction: 'Fungsi awal', currentFunction: 'Fungsi saat ini', dimensions: 'Dimensi', architecturalForm: 'Bentuk arsitektural', materials: 'Material', form: 'Bentuk', structure: 'Struktur', material: 'Material', function: 'Fungsi', symbolism: 'Simbolisme',
+    inspection3d: 'Inspeksi 3D', inspectionMenu: 'Menu inspeksi 3D', normalView: 'Jelajahi', xray: 'X-Ray', sectionCut: 'Potongan', blueprint: 'Blueprint',
+    available: 'Tersedia', limited: 'Terbatas', unavailable: 'Belum tersedia', sectionAxis: 'Sumbu potongan', position: 'Posisi', exteriorStudy: 'Studi bagian luar',
+    blueprintStudy: 'Studi Model 3D', documentedBlueprint: 'Gambar Terdokumentasi', modelStudyNotice: 'Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.',
+    front: 'Depan', side: 'Samping', top: 'Atas', archiveIntro: 'Material dokumenter yang dapat ditelusuri dan terhubung dengan landmark serta buktinya.',
+    yearDate: 'Tahun / tanggal', creator: 'Pembuat', institution: 'Institusi', descriptionCaption: 'Deskripsi / keterangan', licenseRights: 'Lisensi / hak', verification: 'Verifikasi', relatedClaims: 'Klaim terkait',
+    openOriginalSource: 'Buka sumber asli', externalReferenceOnly: 'Referensi eksternal saja', share: 'Bagikan', copyLink: 'Salin tautan', linkCopied: 'Tautan disalin', shareUnavailable: 'Tautan tidak dapat dibagikan',
   },
 } as const
 
@@ -84,13 +96,15 @@ interface I18nValue {
 
 const I18nContext = createContext<I18nValue | null>(null)
 
-export function resolveLocale(search: string, stored: string | null): Locale {
+export function resolveLocale(search: string, stored: string | null, pathname = ''): Locale {
+  const routeLocale = pathname.split('/').filter(Boolean)[0]
+  if (routeLocale === 'en' || routeLocale === 'id') return routeLocale
   const query = new URLSearchParams(search).get('lang')
   return query === 'en' || query === 'id' ? query : stored === 'en' ? 'en' : 'id'
 }
 
 function initialLocale() {
-  try { return resolveLocale(window.location.search, window.localStorage.getItem('heritage-locale')) }
+  try { return resolveLocale(window.location.search, window.localStorage.getItem('heritage-locale'), window.location.pathname) }
   catch { return 'id' as const }
 }
 
@@ -101,9 +115,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = locale
     try { window.localStorage.setItem('heritage-locale', locale) } catch { /* preference remains session-only */ }
     const url = new URL(window.location.href)
-    if (locale === 'en') url.searchParams.set('lang', 'en')
-    else url.searchParams.delete('lang')
-    window.history.replaceState(null, '', url)
+    if (!/^\/(id|en)(\/|$)/.test(url.pathname)) {
+      if (locale === 'en') url.searchParams.set('lang', 'en')
+      else url.searchParams.delete('lang')
+      window.history.replaceState(null, '', url)
+    }
   }, [locale])
 
   return <I18nContext.Provider value={{ locale, setLocale, t: (key) => messages[locale][key] }}>{children}</I18nContext.Provider>

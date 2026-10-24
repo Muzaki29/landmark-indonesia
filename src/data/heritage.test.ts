@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { furtherReadings, getClaims, getFurtherReadings, getProvinces, getSourcesForClaims, provinces, searchLandmarks } from './heritage'
+import { canDisplayArchiveAsset, furtherReadings, getClaims, getFurtherReadings, getProvinces, getSourcesForClaims, provinces, searchLandmarks } from './heritage'
 import { indonesianLandmarkCopy } from './heritage.id'
 
 describe('heritage collection data', () => {
@@ -19,14 +19,12 @@ describe('heritage collection data', () => {
     }
   })
 
-  it('keeps landmark readings and the unchecked Prijotomo bibliography separate from evidence', () => {
+  it('keeps one landmark-specific journal reading per landmark separate from evidence', () => {
     const landmarkReadings = furtherReadings.filter(({ landmarkId }) => landmarkId)
     expect(landmarkReadings).toHaveLength(3)
     expect(new Set(landmarkReadings.map(({ landmarkId }) => landmarkId))).toEqual(new Set(provinces.map(({ landmark }) => landmark.id)))
     expect(landmarkReadings.every(({ status, url }) => status === 'further-reading' && url?.startsWith('https://'))).toBe(true)
-    const uncheckedCollectionReading = furtherReadings.find(({ id }) => id.startsWith('prijotomo'))
-    expect(uncheckedCollectionReading).toMatchObject({ status: 'further-reading' })
-    expect(uncheckedCollectionReading?.landmarkId).toBeUndefined()
+    expect(furtherReadings.every(({ landmarkId }) => landmarkId)).toBe(true)
   })
 
   it('searches verified collection metadata without creating placeholder landmarks', () => {
@@ -57,6 +55,15 @@ describe('heritage collection data', () => {
       expect(getClaims(localized[index].landmark).map(({ id, sourceIds }) => ({ id, sourceIds }))).toEqual(getClaims(landmark).map(({ id, sourceIds }) => ({ id, sourceIds })))
     }
     expect(searchLandmarks('menara jam', localized).map(({ landmark }) => landmark.slug)).toEqual(['jam-gadang'])
-    expect(getFurtherReadings('id').find(({ id }) => id.startsWith('prijotomo'))?.scope).toContain('Belum diverifikasi')
+    expect(getFurtherReadings('id')).toHaveLength(3)
+  })
+
+  it('keeps unlicensed archive media external and inspection claims explicit', () => {
+    for (const { landmark } of provinces) {
+      expect(landmark.archive).not.toHaveLength(0)
+      expect(landmark.archive.every((item) => item.rightsStatus === 'EXTERNAL_REFERENCE_ONLY' && !canDisplayArchiveAsset(item))).toBe(true)
+      expect(landmark.inspectionCapabilities.blueprint.classification).toBe('MODEL_STUDY')
+      expect(landmark.inspectionCapabilities.sectionCut.status).toBe('LIMITED')
+    }
   })
 })

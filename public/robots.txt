@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://muzaki29.github.io/landmark-indonesia/sitemap.xml

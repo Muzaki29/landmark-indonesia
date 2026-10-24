@@ -105,7 +105,6 @@ export const indonesianProvinceCopy: Record<string, { island: string; introducti
 }
 
 export const indonesianReadingScopes: Record<string, string> = {
-  'prijotomo-2006-arsitektur-jawa': 'Bibliografi koleksi; relevansinya terhadap landmark individual belum ditetapkan. Belum diverifikasi.',
   'kurniawan-2019-tugu-nasional': 'Monumen Nasional — perbandingan arsitektur dan konteks pembangunan bangsa.',
   'sadana-2021-tugu-pal-putih': 'Tugu Pal Putih — lingkungan perkotaan, identitas visual, dan persepsi pengunjung.',
   'khadavi-yulcherlina-2018-jam-gadang': 'Jam Gadang — konstruksi dan keandalan struktur terhadap beban gempa.',

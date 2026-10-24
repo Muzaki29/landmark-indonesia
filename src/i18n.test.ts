@@ -7,5 +7,6 @@ describe('language preference', () => {
     expect(resolveLocale('', 'en')).toBe('en')
     expect(resolveLocale('?lang=id', 'en')).toBe('id')
     expect(resolveLocale('?lang=en', 'id')).toBe('en')
+    expect(resolveLocale('?lang=id', 'id', '/en/jakarta/national-monument')).toBe('en')
   })
 })

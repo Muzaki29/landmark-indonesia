@@ -5,9 +5,10 @@ import { SceneErrorBoundary } from './SceneErrorBoundary'
 import { ViewerFallback } from './ViewerFallback'
 import { LandmarkHotspots } from './LandmarkHotspots'
 import type { CameraView, Hotspot, Landmark } from '../data/heritage'
-import type { ExploreMode } from '../state/experienceState'
+import type { ExploreMode, InspectionMode } from '../state/experienceState'
 import type { ViewerCommand } from '../scenes/CameraControls'
 import { useI18n } from '../i18n'
+import { InspectionSceneController } from '../scenes/InspectionSceneController'
 
 const landmarkScenes = {
   monas: lazy(() => import('../scenes/LandmarkScene')),
@@ -34,9 +35,12 @@ interface LandmarkViewerProps {
   cameraView: CameraView | null
   command: ViewerCommand | null
   labels: boolean
+  inspectionMode: InspectionMode
+  sectionAxis: 'x' | 'y' | 'z'
+  sectionPosition: number
 }
 
-export function LandmarkViewer({ landmark, onReady, resetNonce, mode, activeHotspot, onHotspot, cameraView, command, labels }: LandmarkViewerProps) {
+export function LandmarkViewer({ landmark, onReady, resetNonce, mode, activeHotspot, onHotspot, cameraView, command, labels, inspectionMode, sectionAxis, sectionPosition }: LandmarkViewerProps) {
   const { t } = useI18n()
   const [webglSupported] = useState(supportsWebGL)
   const LandmarkScene = landmarkScenes[landmark.slug]
@@ -63,6 +67,7 @@ export function LandmarkViewer({ landmark, onReady, resetNonce, mode, activeHots
       >
         <Suspense fallback={null}>
           <LandmarkScene onReady={onReady} resetNonce={resetNonce} focus={activeHotspot} cameraView={cameraView} command={command} />
+          <InspectionSceneController mode={inspectionMode} axis={sectionAxis} position={sectionPosition} />
           <LandmarkHotspots hotspots={landmark.hotspots} activeId={activeHotspot?.id} visible={mode === 'architecture' || labels} labels={labels} onSelect={onHotspot} focusLabel={t('focus')} />
         </Suspense>
       </Canvas>

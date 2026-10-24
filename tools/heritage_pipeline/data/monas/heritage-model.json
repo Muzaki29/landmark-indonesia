@@ -1,0 +1,70 @@
+{
+  "landmarkId": "monas",
+  "name": "Monumen Nasional",
+  "units": "metres",
+  "modelVersion": "1.0.0",
+  "sourceModel": "src/landmarks/monas/Monument.tsx",
+  "interchange": "tools/heritage_pipeline/data/monas/heritage-model.json",
+  "dimensions": {
+    "totalHeight": { "value": 132, "unit": "m", "status": "VERIFIED", "sourceClaimId": "monas-height" },
+    "flameHeight": { "value": 14, "unit": "m", "status": "VERIFIED", "sourceClaimId": "monas-flame-height" },
+    "flameWidth": { "value": 6, "unit": "m", "status": "VERIFIED", "sourceClaimId": "monas-flame-diameter" },
+    "museumWidth": { "value": 45, "unit": "m", "status": "ESTIMATED", "sourceClaimId": null },
+    "museumHeight": { "value": 8, "unit": "m", "status": "ESTIMATED", "sourceClaimId": null },
+    "cupWidth": { "value": 31.5, "unit": "m", "status": "INTERPRETIVE", "sourceClaimId": null },
+    "cupTopHeight": { "value": 17, "unit": "m", "status": "INTERPRETIVE", "sourceClaimId": null },
+    "shaftBottomWidth": { "value": 3.6, "unit": "m", "status": "INTERPRETIVE", "sourceClaimId": null },
+    "shaftTopWidth": { "value": 2.5, "unit": "m", "status": "INTERPRETIVE", "sourceClaimId": null },
+    "towerTopHeight": { "value": 115, "unit": "m", "status": "INTERPRETIVE", "sourceClaimId": null },
+    "observationWidth": { "value": 11, "unit": "m", "status": "INTERPRETIVE", "sourceClaimId": null }
+  },
+  "components": [
+    {
+      "id": "museum-base",
+      "name": "Museum base exterior",
+      "landmark": "monas",
+      "geometryClassification": "INTERPRETIVE",
+      "dimensionReferences": ["museumWidth"],
+      "evidenceReferences": ["monas-structure"],
+      "modelingNotes": "Exterior massing only; no rooms, foundations, or internal structure are represented.",
+      "inspectionEligible": true,
+      "inspectionRole": "VISUAL_EXTERIOR",
+      "documentedStructural": false
+    },
+    {
+      "id": "obelisk-shaft",
+      "name": "Obelisk shaft exterior",
+      "landmark": "monas",
+      "geometryClassification": "DERIVED",
+      "dimensionReferences": ["totalHeight", "shaftBottomWidth", "shaftTopWidth"],
+      "evidenceReferences": ["monas-height", "monas-structure"],
+      "modelingNotes": "Tapered exterior silhouette; widths remain interpretive.",
+      "inspectionEligible": true,
+      "inspectionRole": "VISUAL_EXTERIOR",
+      "documentedStructural": false
+    },
+    {
+      "id": "independence-flame",
+      "name": "Flame of Independence exterior",
+      "landmark": "monas",
+      "geometryClassification": "DERIVED",
+      "dimensionReferences": ["flameHeight", "flameWidth"],
+      "evidenceReferences": ["monas-flame-height", "monas-flame-diameter", "monas-flame"],
+      "modelingNotes": "Verified envelope dimensions with an interpretive flame silhouette.",
+      "inspectionEligible": true,
+      "inspectionRole": "VISUAL_EXTERIOR",
+      "documentedStructural": false
+    }
+  ],
+  "materials": [
+    { "id": "stone-exterior", "classification": "VISUAL_APPROXIMATION", "componentIds": ["museum-base", "obelisk-shaft"] },
+    { "id": "gold-flame", "classification": "SUPPORTED_MATERIAL", "componentIds": ["independence-flame"], "evidenceReferences": ["monas-flame"] }
+  ],
+  "inspection": {
+    "xrayCapability": "LIMITED",
+    "sectionCutCapability": "LIMITED",
+    "blueprintCapability": "AVAILABLE",
+    "meaningfulInteriorGeometry": false,
+    "blueprintClassification": "MODEL_STUDY"
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "landmarkId": "monas",
+  "modelVersion": "1.0.0",
+  "generatedAt": "2026-10-24T01:51:46Z",
+  "sourceType": "GENERATED",
+  "geometry": {
+    "runtime": "src/landmarks/monas/Monument.tsx",
+    "glb": null,
+    "migrationDecision": "KEEP_PROCEDURAL_R3F",
+    "components": [
+      {
+        "id": "museum-base",
+        "classification": "INTERPRETIVE"
+      },
+      {
+        "id": "obelisk-shaft",
+        "classification": "DERIVED"
+      },
+      {
+        "id": "independence-flame",
+        "classification": "DERIVED"
+      }
+    ]
+  },
+  "materials": [
+    {
+      "id": "stone-exterior",
+      "classification": "VISUAL_APPROXIMATION",
+      "componentIds": [
+        "museum-base",
+        "obelisk-shaft"
+      ]
+    },
+    {
+      "id": "gold-flame",
+      "classification": "SUPPORTED_MATERIAL",
+      "componentIds": [
+        "independence-flame"
+      ],
+      "evidenceReferences": [
+        "monas-flame"
+      ]
+    }
+  ],
+  "textures": [],
+  "elevationViews": [
+    {
+      "landmark": "monas",
+      "view": "FRONT",
+      "asset": "model-study/front.webp",
+      "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
+      "modelVersion": "1.0.0",
+      "classification": "MODEL_STUDY",
+      "generatedAt": "2026-10-24T01:51:46Z",
+      "verifiedDimensionReferences": [
+        "totalHeight",
+        "flameHeight",
+        "flameWidth"
+      ],
+      "interpretiveNotice": {
+        "id": "Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.",
+        "en": "This visualization is derived from the interpretive 3D model and is not an original architectural drawing."
+      }
+    },
+    {
+      "landmark": "monas",
+      "view": "SIDE",
+      "asset": "model-study/side.webp",
+      "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
+      "modelVersion": "1.0.0",
+      "classification": "MODEL_STUDY",
+      "generatedAt": "2026-10-24T01:51:46Z",
+      "verifiedDimensionReferences": [
+        "totalHeight",
+        "flameHeight",
+        "flameWidth"
+      ],
+      "interpretiveNotice": {
+        "id": "Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.",
+        "en": "This visualization is derived from the interpretive 3D model and is not an original architectural drawing."
+      }
+    },
+    {
+      "landmark": "monas",
+      "view": "TOP",
+      "asset": "model-study/top.webp",
+      "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
+      "modelVersion": "1.0.0",
+      "classification": "MODEL_STUDY",
+      "generatedAt": "2026-10-24T01:51:46Z",
+      "verifiedDimensionReferences": [
+        "totalHeight",
+        "flameHeight",
+        "flameWidth"
+      ],
+      "interpretiveNotice": {
+        "id": "Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.",
+        "en": "This visualization is derived from the interpretive 3D model and is not an original architectural drawing."
+      }
+    }
+  ],
+  "blueprintViews": [
+    {
+      "landmark": "monas",
+      "view": "FRONT",
+      "asset": "model-study/front.webp",
+      "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
+      "modelVersion": "1.0.0",
+      "classification": "MODEL_STUDY",
+      "generatedAt": "2026-10-24T01:51:46Z",
+      "verifiedDimensionReferences": [
+        "totalHeight",
+        "flameHeight",
+        "flameWidth"
+      ],
+      "interpretiveNotice": {
+        "id": "Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.",
+        "en": "This visualization is derived from the interpretive 3D model and is not an original architectural drawing."
+      }
+    },
+    {
+      "landmark": "monas",
+      "view": "SIDE",
+      "asset": "model-study/side.webp",
+      "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
+      "modelVersion": "1.0.0",
+      "classification": "MODEL_STUDY",
+      "generatedAt": "2026-10-24T01:51:46Z",
+      "verifiedDimensionReferences": [
+        "totalHeight",
+        "flameHeight",
+        "flameWidth"
+      ],
+      "interpretiveNotice": {
+        "id": "Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.",
+        "en": "This visualization is derived from the interpretive 3D model and is not an original architectural drawing."
+      }
+    },
+    {
+      "landmark": "monas",
+      "view": "TOP",
+      "asset": "model-study/top.webp",
+      "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
+      "modelVersion": "1.0.0",
+      "classification": "MODEL_STUDY",
+      "generatedAt": "2026-10-24T01:51:46Z",
+      "verifiedDimensionReferences": [
+        "totalHeight",
+        "flameHeight",
+        "flameWidth"
+      ],
+      "interpretiveNotice": {
+        "id": "Visualisasi ini berasal dari model 3D interpretatif dan bukan gambar arsitektur asli.",
+        "en": "This visualization is derived from the interpretive 3D model and is not an original architectural drawing."
+      }
+    }
+  ],
+  "inspection": {
+    "xrayCapability": "LIMITED",
+    "sectionCutCapability": "LIMITED",
+    "blueprintCapability": "AVAILABLE",
+    "meaningfulInteriorGeometry": false,
+    "blueprintClassification": "MODEL_STUDY"
+  },
+  "validation": {
+    "status": "PASS",
+    "errors": [],
+    "warnings": [
+      "museumWidth is estimated and has no evidence claim",
+      "museumHeight is estimated and has no evidence claim",
+      "cupWidth is interpretive and has no evidence claim",
+      "cupTopHeight is interpretive and has no evidence claim",
+      "shaftBottomWidth is interpretive and has no evidence claim",
+      "shaftTopWidth is interpretive and has no evidence claim",
+      "towerTopHeight is interpretive and has no evidence claim",
+      "observationWidth is interpretive and has no evidence claim"
+    ],
+    "counts": {
+      "dimensions": 11,
+      "components": 3
+    },
+    "glb": {
+      "status": "NOT_RUN",
+      "reason": "The accepted browser asset is procedural R3F geometry; no GLB is published."
+    }
+  }
+}

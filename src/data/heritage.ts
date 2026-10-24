@@ -1,5 +1,42 @@
 export type SourceStatus = 'verified' | 'further-reading'
 export type VerificationStatus = 'VERIFIED' | 'SUPPORTED' | 'DISPUTED' | 'UNVERIFIED' | 'FURTHER_READING'
+export type InspectionStatus = 'AVAILABLE' | 'LIMITED' | 'UNAVAILABLE'
+export type ArchiveRightsStatus = 'PUBLIC_DOMAIN' | 'OPEN_LICENSE' | 'PERMISSION_GRANTED' | 'EXTERNAL_REFERENCE_ONLY' | 'RIGHTS_UNCLEAR'
+export type ArchiveType = 'HISTORICAL_PHOTO' | 'CONSTRUCTION_PHOTO' | 'ARCHITECTURAL_DRAWING' | 'MAP' | 'DOCUMENT' | 'RESTORATION_DOCUMENTATION' | 'CURRENT_PHOTO' | 'OFFICIAL_ARCHIVE'
+export type LocalizedText = { en: string; id: string }
+
+export interface InspectionCapability {
+  status: InspectionStatus
+  description: LocalizedText
+  evidenceIds: string[]
+}
+
+export interface InspectionCapabilities {
+  xray: InspectionCapability
+  sectionCut: InspectionCapability
+  blueprint: InspectionCapability & { classification: 'DOCUMENTED' | 'MODEL_STUDY' | 'UNAVAILABLE' }
+}
+
+export interface ArchiveItem {
+  id: string
+  landmarkId: string
+  type: ArchiveType
+  title: LocalizedText
+  year?: string
+  date?: string
+  creator?: string
+  institution?: string
+  sourceTitle: string
+  sourceUrl: string
+  license?: string
+  rightsStatus: ArchiveRightsStatus
+  caption: LocalizedText
+  thumbnail?: string
+  asset?: string
+  claimIds?: string[]
+  verificationStatus: Exclude<VerificationStatus, 'FURTHER_READING'>
+  thenAndNowPairId?: string
+}
 
 export interface SourceRecord {
   id: string
@@ -55,7 +92,7 @@ export interface Hotspot {
 }
 
 export interface CameraView {
-  id: '3d' | 'front' | 'side' | 'eye-level'
+  id: '3d' | 'front' | 'side' | 'top' | 'eye-level'
   label: string
   position: [number, number, number]
   target: [number, number, number]
@@ -100,6 +137,8 @@ export interface Landmark {
   relations: HeritageRelation[]
   comparison: Record<string, ComparisonValue | undefined>
   modelNote: string
+  inspectionCapabilities: InspectionCapabilities
+  archive: ArchiveItem[]
   historicalStates?: Array<{ period: string; title: string; description: string; media?: string; modelVariant?: string; evidence: string[] }>
   audioGuide?: { language: string; audioUrl: string; transcript: string; duration: number; credits: string; license: string }
   pronunciation?: { term: string; audioUrl: string; credits: string; license: string }
@@ -227,13 +266,35 @@ const nationalHeritageJamSource: SourceRecord = {
   url: 'https://budaya.data.kemdikbud.go.id/cagarbudaya/objek/KB000809',
 }
 
-export const furtherReadings: FurtherReading[] = [
-  {
-    id: 'prijotomo-2006-arsitektur-jawa',
-    status: 'further-reading',
-    citation: 'Prijotomo, J. (2006). (Re-)Konstruksi Arsitektur Jawa: Griya Jawa dalam Tradisi Tanpatulisan. Surabaya: Wastu Lanas Grafika.',
-    scope: 'Collection bibliography; relevance to individual landmarks has not been established. Not yet checked.',
+const limitedInspection = (evidenceIds: string[]): InspectionCapabilities => ({
+  xray: {
+    status: 'LIMITED',
+    description: {
+      en: 'Exterior opacity can be reduced, but the interpretive model contains no verified internal construction to reveal.',
+      id: 'Opasitas bagian luar dapat dikurangi, tetapi model interpretatif ini tidak memuat konstruksi internal terverifikasi untuk ditampilkan.',
+    },
+    evidenceIds,
   },
+  sectionCut: {
+    status: 'LIMITED',
+    description: {
+      en: 'The clipping plane studies modeled geometry only. It is not evidence of authentic internal construction.',
+      id: 'Bidang potong hanya mempelajari geometri model. Tampilan ini bukan bukti konstruksi internal yang autentik.',
+    },
+    evidenceIds,
+  },
+  blueprint: {
+    status: 'AVAILABLE',
+    classification: 'MODEL_STUDY',
+    description: {
+      en: 'Orthographic views are derived from the interpretive 3D model, not an original architectural drawing.',
+      id: 'Tampilan ortografis berasal dari model 3D interpretatif, bukan gambar arsitektur asli.',
+    },
+    evidenceIds,
+  },
+})
+
+export const furtherReadings: FurtherReading[] = [
   {
     id: 'kurniawan-2019-tugu-nasional',
     landmarkId: 'landmark-monas',
@@ -321,6 +382,14 @@ const monas: Landmark = {
     architecturalForm: { value: 'Obelisk with flame', claimIds: ['monas-structure'] },
   },
   modelNote: 'Procedural interpretive model. Verified overall dimensions are retained; surrounding landscape details are visual approximations.',
+  inspectionCapabilities: limitedInspection(['monas-structure', 'monas-height']),
+  archive: [{
+    id: 'monas-official-documentation', landmarkId: 'landmark-monas', type: 'OFFICIAL_ARCHIVE',
+    title: { en: 'Official Monumen Nasional documentation', id: 'Dokumentasi resmi Monumen Nasional' },
+    institution: jakartaCultureSource.institution, sourceTitle: jakartaCultureSource.title, sourceUrl: jakartaCultureSource.url,
+    rightsStatus: 'EXTERNAL_REFERENCE_ONLY', verificationStatus: 'VERIFIED', claimIds: ['monas-structure', 'monas-height'],
+    caption: { en: 'Official museum documentation retained as an external reference because reuse rights were not established.', id: 'Dokumentasi museum resmi disimpan sebagai referensi eksternal karena hak penggunaan ulang belum ditetapkan.' },
+  }],
 }
 
 const tuguPalPutih: Landmark = {
@@ -388,6 +457,14 @@ const tuguPalPutih: Landmark = {
     heritageStatus: { value: 'Provincial cultural heritage', claimIds: ['tugu-heritage-status'] },
   },
   modelNote: 'Procedural visual study based on official heritage photography and descriptions. Current survey dimensions were not available in the checked registry, so proportions are interpretive.',
+  inspectionCapabilities: limitedInspection(['tugu-form', 'tugu-conservation']),
+  archive: [{
+    id: 'tugu-restoration-documentation', landmarkId: 'landmark-tugu', type: 'RESTORATION_DOCUMENTATION', year: '2012',
+    title: { en: '2012 rehabilitation documentation', id: 'Dokumentasi rehabilitasi 2012' },
+    institution: jogjaRehabilitationSource.institution, sourceTitle: jogjaRehabilitationSource.title, sourceUrl: jogjaRehabilitationSource.url,
+    rightsStatus: 'EXTERNAL_REFERENCE_ONLY', verificationStatus: 'VERIFIED', claimIds: ['tugu-conservation'],
+    caption: { en: 'The provincial culture office documents repair of plaster, finishes, the teak finial, and the protective garden.', id: 'Dinas kebudayaan provinsi mendokumentasikan perbaikan plester, lapisan akhir, mustaka kayu jati, dan taman pelindung.' },
+  }],
 }
 
 const jamGadang: Landmark = {
@@ -452,6 +529,14 @@ const jamGadang: Landmark = {
     materials: { value: 'Lime material', claimIds: ['jam-material'] },
   },
   modelNote: 'Procedural interpretive model using the verified 26-metre height and official visual references. Facade and plaza proportions are not an architectural survey.',
+  inspectionCapabilities: limitedInspection(['jam-form', 'jam-material', 'jam-height']),
+  archive: [{
+    id: 'jam-official-heritage-record', landmarkId: 'landmark-jam-gadang', type: 'OFFICIAL_ARCHIVE',
+    title: { en: 'Official Jam Gadang heritage record', id: 'Catatan resmi cagar budaya Jam Gadang' },
+    institution: nationalHeritageJamSource.institution, sourceTitle: nationalHeritageJamSource.title, sourceUrl: nationalHeritageJamSource.url,
+    rightsStatus: 'EXTERNAL_REFERENCE_ONLY', verificationStatus: 'VERIFIED', claimIds: ['jam-location', 'jam-form'],
+    caption: { en: 'The national heritage registry record is linked as external documentation; media reuse rights were not established.', id: 'Catatan registri cagar budaya nasional ditautkan sebagai dokumentasi eksternal; hak penggunaan ulang media belum ditetapkan.' },
+  }],
 }
 
 export const provinces: Province[] = [
@@ -530,6 +615,10 @@ export function getSourcesForClaims(landmark: Landmark, claimIds: string[]) {
   const wantedClaims = new Set(claimIds)
   const sourceIds = new Set(getClaims(landmark).filter(({ id }) => wantedClaims.has(id)).flatMap(({ sourceIds }) => sourceIds))
   return landmark.sources.filter(({ id }) => sourceIds.has(id))
+}
+
+export function canDisplayArchiveAsset(item: ArchiveItem) {
+  return Boolean(item.asset && ['PUBLIC_DOMAIN', 'OPEN_LICENSE', 'PERMISSION_GRANTED'].includes(item.rightsStatus))
 }
 
 export function searchLandmarks(query: string, collection = provinces) {

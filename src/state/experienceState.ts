@@ -1,6 +1,7 @@
-export type LandmarkSection = 'overview' | 'history' | 'architecture' | 'timeline' | 'cultural-context' | 'connected-heritage' | 'sources'
+export type LandmarkSection = 'overview' | 'history' | 'architecture' | 'timeline' | 'cultural-context' | 'connected-heritage' | 'archive' | 'sources'
 export type ExperiencePanel = 'explore' | 'compare' | 'about' | 'collection-sources' | LandmarkSection | null
 export type ExploreMode = 'explore' | 'architecture' | 'history'
+export type InspectionMode = 'explore' | 'xray' | 'section-cut' | 'blueprint'
 
 export const landmarkSections: { id: LandmarkSection; label: string }[] = [
   { id: 'overview', label: 'Overview' },
@@ -9,6 +10,7 @@ export const landmarkSections: { id: LandmarkSection; label: string }[] = [
   { id: 'timeline', label: 'Timeline' },
   { id: 'cultural-context', label: 'Cultural Context' },
   { id: 'connected-heritage', label: 'Connected Heritage' },
+  { id: 'archive', label: 'Archive' },
   { id: 'sources', label: 'Sources' },
 ]
 

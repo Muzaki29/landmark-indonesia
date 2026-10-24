@@ -9,6 +9,7 @@ import {
   type Landmark,
   type Province,
   type SourceRecord,
+  canDisplayArchiveAsset,
 } from '../data/heritage'
 import { landmarkSections, type ExperiencePanel, type ExploreMode, type LandmarkSection } from '../state/experienceState'
 import type { CameraView } from '../data/heritage'
@@ -76,7 +77,7 @@ export function HelpPanel({ cameraViews, onClose }: { cameraViews: CameraView[];
 export function SectionNavigation({ active, onOpen }: { active: LandmarkSection; onOpen: (section: LandmarkSection) => void }) {
   const { t } = useI18n()
   const buttons = useRef<Array<HTMLButtonElement | null>>([])
-  const sectionLabels: Record<LandmarkSection, string> = { overview: t('overview'), history: t('history'), architecture: t('architecture'), timeline: t('timeline'), 'cultural-context': t('culturalContext'), 'connected-heritage': t('connectedHeritage'), sources: t('sources') }
+  const sectionLabels: Record<LandmarkSection, string> = { overview: t('overview'), history: t('history'), architecture: t('architecture'), timeline: t('timeline'), 'cultural-context': t('culturalContext'), 'connected-heritage': t('connectedHeritage'), archive: t('archive'), sources: t('sources') }
 
   function moveFocus(index: number, key: string) {
     if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(key)) return
@@ -256,7 +257,7 @@ export function InformationPanel({ panel, province, evidenceMode, onEvidenceMode
   onClose: () => void
 }) {
   const { t } = useI18n()
-  const sectionLabels: Record<LandmarkSection, string> = { overview: t('overview'), history: t('history'), architecture: t('architecture'), timeline: t('timeline'), 'cultural-context': t('culturalContext'), 'connected-heritage': t('connectedHeritage'), sources: t('sources') }
+  const sectionLabels: Record<LandmarkSection, string> = { overview: t('overview'), history: t('history'), architecture: t('architecture'), timeline: t('timeline'), 'cultural-context': t('culturalContext'), 'connected-heritage': t('connectedHeritage'), archive: t('archive'), sources: t('sources') }
   if (panel === 'about') {
     return <aside className="experience-panel information-panel" aria-label={t('aboutCollection')}><PanelHeader eyebrow={t('aboutProject')} title={t('atlasTitle')} onClose={onClose} /><div className="panel-content prose about-content"><p>{t('aboutIntro')}</p><section><h3>{t('independentProject')}</h3><p>{t('independentBody')}</p></section><section><h3>{t('methodology3d')}</h3><p>{t('methodology3dBody')}</p></section><section><h3>{t('researchMethodology')}</h3><p>{t('researchBody')}</p></section><section><h3>{t('contribute')}</h3><p>{t('contributeBody')}</p><a href="https://github.com/Muzaki29/landmark-indonesia/issues/new" target="_blank" rel="noreferrer">{t('suggestCorrection')} ↗</a></section><section><h3>{t('credits')}</h3><p>{t('creditsBody')}</p></section></div></aside>
   }
@@ -281,7 +282,7 @@ function PanelHeader({ eyebrow, title, onClose }: { eyebrow: string; title: stri
 }
 
 function LandmarkSectionContent({ landmark, section, evidenceMode, onHotspot }: { landmark: Landmark; section: LandmarkSection; evidenceMode: boolean; onHotspot: (id: string) => void }) {
-  const { t } = useI18n()
+  const { locale, t } = useI18n()
   if (section === 'overview') {
     return <div className="panel-content"><p className="lead">{landmark.shortDescription}<ClaimSources landmark={landmark} claimIds={[landmark.overviewClaimId]} enabled={evidenceMode} /></p><dl className="metadata"><div><dt>{t('location')}</dt><dd>{landmark.location}</dd></div><div><dt>{t('type')}</dt><dd>{landmark.type}</dd></div>{landmark.heritageStatus && <div><dt>{t('heritageStatus')}</dt><dd>{landmark.heritageStatus.value}<ClaimSources landmark={landmark} claimIds={landmark.heritageStatus.claimIds} enabled={evidenceMode} /></dd></div>}</dl><dl className="fact-grid">{landmark.facts.map((fact) => <div key={fact.id}><dt>{fact.label}</dt><dd>{fact.value}<ClaimSources landmark={landmark} claimIds={[fact.id]} enabled={evidenceMode} /></dd></div>)}</dl></div>
   }
@@ -305,6 +306,10 @@ function LandmarkSectionContent({ landmark, section, evidenceMode, onHotspot }: 
       const relations = landmark.relations.filter((relation) => relation.type === type)
       return relations.length > 0 && <section key={type}><h4>{relationLabel(type, t)}</h4>{relations.map((relation) => <article key={relation.id}><strong>{relation.title}</strong><p>{relation.summary}<ClaimSources landmark={landmark} claimIds={relation.claimIds} enabled={evidenceMode} /></p></article>)}</section>
     })}</div>
+  }
+
+  if (section === 'archive') {
+    return <div className="panel-content archive-content"><p className="lead">{t('archiveIntro')}</p>{landmark.archive.map((item) => <article key={item.id}><span>{item.type.replaceAll('_', ' ')}</span><h3>{item.title[locale]}</h3>{canDisplayArchiveAsset(item) && item.thumbnail && <img src={item.thumbnail} alt="" loading="lazy" />}<dl><div><dt>{t('institution')}</dt><dd>{item.institution ?? '—'}</dd></div><div><dt>{t('yearDate')}</dt><dd>{item.year ?? item.date ?? '—'}</dd></div><div><dt>{t('licenseRights')}</dt><dd>{item.license ?? t('externalReferenceOnly')}</dd></div><div><dt>{t('verification')}</dt><dd>{item.verificationStatus}</dd></div></dl><p>{item.caption[locale]}{item.claimIds && <ClaimSources landmark={landmark} claimIds={item.claimIds} enabled={evidenceMode} />}</p><a href={item.sourceUrl} target="_blank" rel="noreferrer">{t('openOriginalSource')} ↗</a></article>)}</div>
   }
 
   return <SourceList landmark={landmark} />
