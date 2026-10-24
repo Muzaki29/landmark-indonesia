@@ -13,6 +13,7 @@ import {
 import { landmarkSections, type ExperiencePanel, type ExploreMode, type LandmarkSection } from '../state/experienceState'
 import type { CameraView } from '../data/heritage'
 import { useI18n, type MessageKey } from '../i18n'
+import { INDONESIA_MAP, projectIndonesiaPoint } from '../utils/mapProjection'
 
 function relationLabel(value: string, t: (key: MessageKey) => string) {
   const labels: Record<string, MessageKey> = { PLACE: 'place', EVENT: 'event', PERSON: 'person', CULTURAL_CONTEXT: 'culturalContextGroup', FORM: 'form', STRUCTURE: 'structure', MATERIAL: 'material', FUNCTION: 'function', SYMBOLISM: 'symbolism' }
@@ -26,6 +27,7 @@ export function PrimaryNav({ active, onOpen }: { active: ExperiencePanel; onOpen
       {([['explore', 'explore'], ['about', 'about'], ['collection-sources', 'sources']] as const).map(([panel, key]) => (
         <button key={panel} type="button" aria-pressed={active === panel} onClick={() => onOpen(panel)}>{t(key)}</button>
       ))}
+      <a href="https://saweria.co/muzakiabdullah" target="_blank" rel="noreferrer">{t('support')}<span aria-hidden="true">↗</span></a>
     </nav>
   )
 }
@@ -148,7 +150,8 @@ export function CollectionNavigator({ provinces, activeId, onSelect, onExplore }
 type GeoJson = { features: Array<{ geometry: { type: 'Polygon' | 'MultiPolygon'; coordinates: number[][][] | number[][][][] } }> }
 
 function mapPoint([longitude, latitude]: number[]) {
-  return [((longitude - 94) / 47) * 800, ((6 - latitude) / 17) * 320]
+  const { x, y } = projectIndonesiaPoint(longitude, latitude)
+  return [x, y]
 }
 
 function ringPath(ring: number[][]) {
@@ -188,7 +191,7 @@ export function ProvinceNavigator({ provinces, activeId, onSelect, onClose }: {
 
   return (
     <aside className="experience-panel atlas-panel" aria-label={t('exploreIndonesia')}>
-      <PanelHeader eyebrow={t('exploreIndonesia')} title="Digital Heritage Atlas" onClose={onClose} />
+      <PanelHeader eyebrow={t('exploreIndonesia')} title={t('digitalHeritageAtlas')} onClose={onClose} />
       <div className="atlas-switch" role="group" aria-label={t('atlasView')}>
         <button type="button" aria-pressed={view === 'atlas'} onClick={() => setView('atlas')}>{t('mapSearch')}</button>
         <button type="button" aria-pressed={view === 'compare'} onClick={() => setView('compare')}>{t('compareLandmarks')}</button>
@@ -199,15 +202,20 @@ export function ProvinceNavigator({ provinces, activeId, onSelect, onClose }: {
           <label><span>{t('province')}</span><select value={provinceFilter} onChange={(event) => setProvinceFilter(event.target.value)}><option value="all">{t('allActiveProvinces')}</option>{provinces.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
         </div>
         <div className="indonesia-map" aria-label={t('indonesiaMap')}>
-          <svg viewBox="0 0 800 320" role="img" aria-label={t('naturalEarthBoundary')}><path d={indonesiaPath(mapData)} /></svg>
-          {provinces.map((item) => item.landmark.coordinates && <button
-            key={item.id}
-            type="button"
-            className={item.id === activeId ? 'map-marker map-marker--active' : 'map-marker'}
-            style={{ left: `${((item.landmark.coordinates.longitude - 94) / 47) * 100}%`, top: `${((6 - item.landmark.coordinates.latitude) / 17) * 100}%` }}
-            onClick={() => onSelect(item.id)}
-            aria-label={`${t('openLandmark')} ${item.landmark.name}, ${item.name}`}
-          ><span>{item.code}</span><strong>{item.landmark.shortName}</strong></button>)}
+          <svg viewBox={`0 0 ${INDONESIA_MAP.width} ${INDONESIA_MAP.height}`} role="img" aria-label={t('naturalEarthBoundary')}><path d={indonesiaPath(mapData)} /></svg>
+          {provinces.map((item) => {
+            if (!item.landmark.coordinates) return null
+            const point = projectIndonesiaPoint(item.landmark.coordinates.longitude, item.landmark.coordinates.latitude)
+            return <button
+              key={item.id}
+              type="button"
+              className={item.id === activeId ? 'map-marker map-marker--active' : 'map-marker'}
+              data-landmark={item.landmark.slug}
+              style={{ left: `${(point.x / INDONESIA_MAP.width) * 100}%`, top: `${(point.y / INDONESIA_MAP.height) * 100}%` }}
+              onClick={() => onSelect(item.id)}
+              aria-label={`${t('openLandmark')} ${item.landmark.name}, ${item.name}`}
+            ><span>{item.code}</span><strong>{item.landmark.shortName}</strong></button>
+          })}
           {!mapData && <p>{t('mapUnavailable')}</p>}
         </div>
         <p className="map-credit">{t('mapCredit')}</p>
@@ -250,7 +258,7 @@ export function InformationPanel({ panel, province, evidenceMode, onEvidenceMode
   const { t } = useI18n()
   const sectionLabels: Record<LandmarkSection, string> = { overview: t('overview'), history: t('history'), architecture: t('architecture'), timeline: t('timeline'), 'cultural-context': t('culturalContext'), 'connected-heritage': t('connectedHeritage'), sources: t('sources') }
   if (panel === 'about') {
-    return <aside className="experience-panel information-panel" aria-label={t('aboutCollection')}><PanelHeader eyebrow={t('aboutProject')} title={t('atlasTitle')} onClose={onClose} /><div className="panel-content prose about-content"><p>{t('aboutIntro')}</p><section><h3>{t('independentProject')}</h3><p>{t('independentBody')}</p></section><section><h3>{t('methodology3d')}</h3><p>{t('methodology3dBody')}</p></section><section><h3>{t('researchMethodology')}</h3><p>{t('researchBody')}</p></section><section><h3>{t('contribute')}</h3><p>{t('contributeBody')}</p><a href="https://github.com/Muzaki29/landmark-indonesia/issues/new" target="_blank" rel="noreferrer">{t('suggestCorrection')} ↗</a></section><section className="support-project"><h3>{t('supportProject')}</h3><p>{t('supportBody')}</p><a href="https://saweria.co/muzakiabdullah" target="_blank" rel="noreferrer">{t('supportLink')} ↗</a></section><section><h3>{t('credits')}</h3><p>{t('creditsBody')}</p></section></div></aside>
+    return <aside className="experience-panel information-panel" aria-label={t('aboutCollection')}><PanelHeader eyebrow={t('aboutProject')} title={t('atlasTitle')} onClose={onClose} /><div className="panel-content prose about-content"><p>{t('aboutIntro')}</p><section><h3>{t('independentProject')}</h3><p>{t('independentBody')}</p></section><section><h3>{t('methodology3d')}</h3><p>{t('methodology3dBody')}</p></section><section><h3>{t('researchMethodology')}</h3><p>{t('researchBody')}</p></section><section><h3>{t('contribute')}</h3><p>{t('contributeBody')}</p><a href="https://github.com/Muzaki29/landmark-indonesia/issues/new" target="_blank" rel="noreferrer">{t('suggestCorrection')} ↗</a></section><section><h3>{t('credits')}</h3><p>{t('creditsBody')}</p></section></div></aside>
   }
 
   if (panel === 'collection-sources') {

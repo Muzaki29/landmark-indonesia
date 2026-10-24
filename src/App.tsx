@@ -79,7 +79,10 @@ export default function App() {
   }
 
   function selectProvince(provinceId: string) {
-    if (provinceId === state.provinceId) return
+    if (provinceId === state.provinceId) {
+      dispatch({ type: 'close-panel' })
+      return
+    }
     setReady(false)
     setExploring(false)
     setMode('explore')

@@ -30,9 +30,20 @@ describe('heritage collection data', () => {
   })
 
   it('searches verified collection metadata without creating placeholder landmarks', () => {
-    expect(searchLandmarks('Bukittinggi').map(({ landmark }) => landmark.slug)).toEqual(['jam-gadang'])
-    expect(searchLandmarks('obelisk').map(({ landmark }) => landmark.slug)).toEqual(['monas'])
+    const expected = {
+      Monas: 'monas', Jakarta: 'monas', Tugu: 'tugu-pal-putih', Yogyakarta: 'tugu-pal-putih',
+      'Jam Gadang': 'jam-gadang', Bukittinggi: 'jam-gadang', 'Sumatera Barat': 'jam-gadang', obelisk: 'monas',
+    }
+    for (const [query, slug] of Object.entries(expected)) {
+      expect(searchLandmarks(query).map(({ landmark }) => landmark.slug)).toEqual([slug])
+    }
     expect(searchLandmarks('not in collection')).toEqual([])
+  })
+
+  it('composes province filtering with search without duplicating results', () => {
+    const yogyakarta = provinces.filter(({ id }) => id === 'province-yogyakarta')
+    expect(searchLandmarks('Tugu', yogyakarta).map(({ landmark }) => landmark.slug)).toEqual(['tugu-pal-putih'])
+    expect(searchLandmarks('Monas', yogyakarta)).toEqual([])
   })
 
   it('keeps Indonesian content complete and attached to the same evidence', () => {

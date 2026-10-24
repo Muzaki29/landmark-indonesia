@@ -5,7 +5,7 @@ export type Locale = 'id' | 'en'
 
 const messages = {
   en: {
-    explore: 'Explore', about: 'About', sources: 'Sources', exploreIndonesia: 'Explore Indonesia', interactiveHeritage: 'Interactive\n3D Heritage',
+    explore: 'Explore', about: 'About', sources: 'Sources', support: 'Support', exploreIndonesia: 'Explore Indonesia', interactiveHeritage: 'Interactive\n3D Heritage',
     landingSummary: 'Three landmarks. Three provincial stories. One source-backed digital exhibition.', language: 'Language', primary: 'Primary navigation',
     overview: 'Overview', history: 'History', architecture: 'Architecture', timeline: 'Timeline', culturalContext: 'Cultural Context', connectedHeritage: 'Connected Heritage',
     exploreMode: 'Explore', architectureMode: 'Architecture', historyMode: 'History', explorationMode: '3D exploration mode',
@@ -14,7 +14,7 @@ const messages = {
     viewerHelp: 'Viewer help', controlsShortcuts: 'Controls & shortcuts', navigation: 'Navigation', drag: 'Drag', orbitLandmark: 'Orbit landmark',
     scrollPinch: 'Scroll / pinch', zoom: 'Zoom', clickMarker: 'Click marker', selectFocus: 'Select and focus component', camera: 'Camera', cameraView: 'view',
     resetFit: 'Reset / fit view', exploration: 'Exploration', componentLabels: 'Component labels', openHelp: 'Open this help', closePanelHotspot: 'Close panel or hotspot',
-    landmarkInformation: 'Landmark information', landmarkCollection: 'Landmark collection', exploreAtlas: 'Explore Indonesia atlas', mapSearch: 'Map & search',
+    landmarkInformation: 'Landmark information', landmarkCollection: 'Landmark collection', exploreAtlas: 'Explore Indonesia atlas', digitalHeritageAtlas: 'Digital Heritage Atlas', mapSearch: 'Map & search',
     compareLandmarks: 'Compare landmarks', atlasView: 'Atlas view', searchCollection: 'Search collection', searchPlaceholder: 'Landmark, province, city, period…',
     province: 'Province', allActiveProvinces: 'All active provinces', indonesiaMap: 'Map of Indonesia with active landmark locations', naturalEarthBoundary: 'Indonesia boundary from Natural Earth',
     openLandmark: 'Open', mapUnavailable: 'Geographic boundary unavailable. The verified collection list remains accessible below.',
@@ -26,7 +26,6 @@ const messages = {
     methodology3d: '3D methodology', methodology3dBody: 'Every scene is a procedural interpretive study. Verified dimensions are used when available; proportions and landscape details are disclosed as visual approximations rather than survey records.',
     researchMethodology: 'Research methodology', researchBody: 'Verified uses authoritative official evidence. Supported uses credible academic or institutional evidence. Disputed preserves material disagreement. Unverified marks insufficient evidence. Further reading remains separate until checked.',
     contribute: 'Contribute', contributeBody: 'Corrections, authoritative sources, landmark suggestions, and research leads are reviewed before publication.', suggestCorrection: 'Suggest a correction or source',
-    supportProject: 'Support this project', supportBody: 'Support continued research and interactive documentation of Indonesian heritage.', supportLink: 'Support this independent project',
     credits: 'Credits', creditsBody: 'Development, interface design, procedural 3D, and research: Muzaki Abdullah Irsyad. Geographic boundary: Natural Earth, public domain. Historical facts remain credited to their listed source institutions.',
     collection: 'Collection', sourcesReading: 'Sources & reading', collectionSources: 'Collection sources', landmarkSections: 'Landmark sections', hideSources: 'Hide sources', showSources: 'Show sources',
     location: 'Location', type: 'Type', heritageStatus: 'Heritage status', exploreComponents: 'Explore components', interpretation3d: '3D interpretation', view3d: 'View in 3D',
@@ -40,7 +39,7 @@ const messages = {
     period: 'Period', originalFunction: 'Original function', currentFunction: 'Current function', dimensions: 'Dimensions', architecturalForm: 'Architectural form', materials: 'Materials', form: 'Form', structure: 'Structure', material: 'Material', function: 'Function', symbolism: 'Symbolism',
   },
   id: {
-    explore: 'Jelajahi', about: 'Tentang', sources: 'Sumber', exploreIndonesia: 'Jelajahi Indonesia', interactiveHeritage: 'Warisan 3D\nInteraktif',
+    explore: 'Jelajahi', about: 'Tentang', sources: 'Sumber', support: 'Dukung', exploreIndonesia: 'Jelajahi Indonesia', interactiveHeritage: 'Warisan 3D\nInteraktif',
     landingSummary: 'Tiga landmark. Tiga cerita daerah. Satu pameran digital berbasis sumber.', language: 'Bahasa', primary: 'Navigasi utama',
     overview: 'Ikhtisar', history: 'Sejarah', architecture: 'Arsitektur', timeline: 'Linimasa', culturalContext: 'Konteks Budaya', connectedHeritage: 'Keterkaitan Warisan',
     exploreMode: 'Jelajahi', architectureMode: 'Arsitektur', historyMode: 'Sejarah', explorationMode: 'Mode penjelajahan 3D',
@@ -49,7 +48,7 @@ const messages = {
     viewerHelp: 'Bantuan penampil', controlsShortcuts: 'Kontrol & pintasan', navigation: 'Navigasi', drag: 'Seret', orbitLandmark: 'Putar mengelilingi landmark',
     scrollPinch: 'Gulir / cubit', zoom: 'Perbesar atau perkecil', clickMarker: 'Klik penanda', selectFocus: 'Pilih dan fokuskan komponen', camera: 'Kamera', cameraView: 'tampilan',
     resetFit: 'Atur ulang / sesuaikan', exploration: 'Penjelajahan', componentLabels: 'Label komponen', openHelp: 'Buka bantuan ini', closePanelHotspot: 'Tutup panel atau hotspot',
-    landmarkInformation: 'Informasi landmark', landmarkCollection: 'Koleksi landmark', exploreAtlas: 'Jelajahi atlas Indonesia', mapSearch: 'Peta & pencarian',
+    landmarkInformation: 'Informasi landmark', landmarkCollection: 'Koleksi landmark', exploreAtlas: 'Jelajahi atlas Indonesia', digitalHeritageAtlas: 'Atlas Warisan Digital', mapSearch: 'Peta & pencarian',
     compareLandmarks: 'Bandingkan landmark', atlasView: 'Tampilan atlas', searchCollection: 'Cari koleksi', searchPlaceholder: 'Landmark, provinsi, kota, periode…',
     province: 'Provinsi', allActiveProvinces: 'Semua provinsi aktif', indonesiaMap: 'Peta Indonesia dengan lokasi landmark aktif', naturalEarthBoundary: 'Batas Indonesia dari Natural Earth',
     openLandmark: 'Buka', mapUnavailable: 'Batas geografis tidak tersedia. Daftar koleksi terverifikasi tetap dapat diakses di bawah.',
@@ -61,7 +60,6 @@ const messages = {
     methodology3d: 'Metodologi 3D', methodology3dBody: 'Setiap adegan merupakan studi interpretatif prosedural. Dimensi terverifikasi digunakan ketika tersedia; proporsi dan detail lanskap dinyatakan sebagai perkiraan visual, bukan hasil survei.',
     researchMethodology: 'Metodologi riset', researchBody: 'Terverifikasi menggunakan bukti resmi yang berwenang. Didukung Sumber menggunakan bukti akademik atau kelembagaan yang kredibel. Diperdebatkan mempertahankan perbedaan antarsumber. Belum Terverifikasi menandai bukti yang belum memadai. Bacaan Lanjutan tetap dipisahkan hingga diperiksa.',
     contribute: 'Berkontribusi', contributeBody: 'Koreksi, sumber berwenang, usulan landmark, dan petunjuk riset ditinjau sebelum diterbitkan.', suggestCorrection: 'Usulkan koreksi atau sumber',
-    supportProject: 'Dukung proyek ini', supportBody: 'Dukung kelanjutan pengembangan, riset, dan dokumentasi interaktif warisan Indonesia.', supportLink: 'Dukung proyek independen ini',
     credits: 'Kredit', creditsBody: 'Pengembangan, desain antarmuka, 3D prosedural, dan riset: Muzaki Abdullah Irsyad. Batas geografis: Natural Earth, domain publik. Fakta sejarah tetap dikreditkan kepada lembaga sumber yang tercantum.',
     collection: 'Koleksi', sourcesReading: 'Sumber & bacaan', collectionSources: 'Sumber koleksi', landmarkSections: 'Bagian informasi landmark', hideSources: 'Sembunyikan sumber', showSources: 'Tampilkan sumber',
     location: 'Lokasi', type: 'Jenis', heritageStatus: 'Status cagar budaya', exploreComponents: 'Jelajahi komponen', interpretation3d: 'Interpretasi 3D', view3d: 'Lihat dalam 3D',
