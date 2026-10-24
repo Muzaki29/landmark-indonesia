@@ -57,21 +57,22 @@ export function ViewerControls({ views, activeView, labels, onView, onLabels, on
   return <aside className="viewer-controls-panel" aria-label={t('inspectionControls')}><h2>{t('view')}</h2><div className="camera-presets">{views.map((view, index) => <button key={view.id} type="button" aria-pressed={activeView === view.id} onClick={() => onView(view.id)}><span>{index + 1}</span>{view.label}</button>)}</div><button className="labels-toggle" type="button" aria-pressed={labels} onClick={onLabels}>{t('labels')} <kbd>L</kbd></button><button className="reset-camera" type="button" onClick={onReset}>{t('resetView')} <kbd>R</kbd></button></aside>
 }
 
-export function ViewerToolbar({ fullscreen, onHelp, onZoomIn, onZoomOut, onFit, onFullscreen }: {
+export function ViewerToolbar({ fullscreen, onHelp, onZoomIn, onZoomOut, onFit, onFullscreen, onShare }: {
   fullscreen: boolean
   onHelp: () => void
   onZoomIn: () => void
   onZoomOut: () => void
   onFit: () => void
   onFullscreen: () => void
+  onShare: () => void
 }) {
   const { t } = useI18n()
-  return <nav className="viewer-toolbar" aria-label={t('viewerToolbar')}><button type="button" onClick={onHelp}><span aria-hidden="true">?</span><strong>{t('help')}</strong></button><button type="button" onClick={onZoomIn}><span aria-hidden="true">＋</span><strong>{t('zoomIn')}</strong></button><button type="button" onClick={onZoomOut}><span aria-hidden="true">−</span><strong>{t('zoomOut')}</strong></button><button type="button" onClick={onFit}><span aria-hidden="true">⌂</span><strong>{t('fitView')}</strong></button><button type="button" onClick={onFullscreen}><span aria-hidden="true">⛶</span><strong>{fullscreen ? t('exitFullscreen') : t('fullscreen')}</strong></button></nav>
+  return <nav className="viewer-toolbar" aria-label={t('viewerToolbar')}><button type="button" onClick={onHelp}><span aria-hidden="true">?</span><strong>{t('help')}</strong></button><button type="button" onClick={onZoomIn}><span aria-hidden="true">＋</span><strong>{t('zoomIn')}</strong></button><button type="button" onClick={onZoomOut}><span aria-hidden="true">−</span><strong>{t('zoomOut')}</strong></button><button type="button" onClick={onFit}><span aria-hidden="true">⌂</span><strong>{t('fitView')}</strong></button><button type="button" onClick={onShare}><span aria-hidden="true">↗</span><strong>{t('share')}</strong></button><button type="button" onClick={onFullscreen}><span aria-hidden="true">⛶</span><strong>{fullscreen ? t('exitFullscreen') : t('fullscreen')}</strong></button></nav>
 }
 
 export function HelpPanel({ cameraViews, onClose }: { cameraViews: CameraView[]; onClose: () => void }) {
   const { t } = useI18n()
-  return <aside className="experience-panel help-panel" aria-label={t('controlsShortcuts')}><PanelHeader eyebrow={t('viewerHelp')} title={t('controlsShortcuts')} onClose={onClose} /><div className="help-grid"><section><h3>{t('navigation')}</h3><dl><div><dt>{t('drag')}</dt><dd>{t('orbitLandmark')}</dd></div><div><dt>{t('scrollPinch')}</dt><dd>{t('zoom')}</dd></div><div><dt>{t('clickMarker')}</dt><dd>{t('selectFocus')}</dd></div></dl></section><section><h3>{t('camera')}</h3><dl>{cameraViews.map((view, index) => <div key={view.id}><dt>{index + 1}</dt><dd>{view.label} {t('cameraView')}</dd></div>)}<div><dt>R</dt><dd>{t('resetFit')}</dd></div></dl></section><section><h3>{t('exploration')}</h3><dl><div><dt>L</dt><dd>{t('componentLabels')}</dd></div><div><dt>?</dt><dd>{t('openHelp')}</dd></div><div><dt>Esc</dt><dd>{t('closePanelHotspot')}</dd></div></dl></section></div></aside>
+  return <aside className="experience-panel help-panel" aria-label={t('controlsShortcuts')}><PanelHeader eyebrow={t('viewerHelp')} title={t('controlsShortcuts')} onClose={onClose} /><div className="help-grid"><section><h3>{t('navigation')}</h3><dl><div><dt>{t('drag')}</dt><dd>{t('orbitLandmark')}</dd></div><div><dt>{t('scrollPinch')}</dt><dd>{t('zoom')}</dd></div><div><dt>{t('clickMarker')}</dt><dd>{t('selectFocus')}</dd></div></dl></section><section><h3>{t('camera')}</h3><dl>{cameraViews.map((view, index) => <div key={view.id}><dt>{index + 1}</dt><dd>{view.label} {t('cameraView')}</dd></div>)}<div><dt>R</dt><dd>{t('resetFit')}</dd></div></dl></section><section><h3>{t('exploration')}</h3><dl><div><dt>{t('display')}</dt><dd>{t('displayHelp')}</dd></div><div><dt>{t('sectionCut')}</dt><dd>{t('sectionCutHelp')}</dd></div><div><dt>← / →</dt><dd>{t('tourHelp')}</dd></div><div><dt>Space</dt><dd>{t('tourHelp')}</dd></div><div><dt>L</dt><dd>{t('componentLabels')}</dd></div><div><dt>{t('fullscreen')}</dt><dd>{t('fullscreenHelp')}</dd></div><div><dt>?</dt><dd>{t('openHelp')}</dd></div><div><dt>Esc</dt><dd>{t('closePanelHotspot')}</dd></div></dl></section></div></aside>
 }
 
 export function SectionNavigation({ active, onOpen }: { active: LandmarkSection; onOpen: (section: LandmarkSection) => void }) {
@@ -301,11 +302,7 @@ function LandmarkSectionContent({ landmark, section, evidenceMode, onHotspot }: 
   }
 
   if (section === 'connected-heritage') {
-    const groups = ['PLACE', 'EVENT', 'PERSON', 'CULTURAL_CONTEXT'] as const
-    return <div className="panel-content connected-content"><h3>{t('connectedHeritage')}</h3><p className="connected-intro">{t('connectedIntro')}</p>{groups.map((type) => {
-      const relations = landmark.relations.filter((relation) => relation.type === type)
-      return relations.length > 0 && <section key={type}><h4>{relationLabel(type, t)}</h4>{relations.map((relation) => <article key={relation.id}><strong>{relation.title}</strong><p>{relation.summary}<ClaimSources landmark={landmark} claimIds={relation.claimIds} enabled={evidenceMode} /></p></article>)}</section>
-    })}</div>
+    return <ConnectedHeritagePanel landmark={landmark} evidenceMode={evidenceMode} />
   }
 
   if (section === 'archive') {
@@ -313,6 +310,16 @@ function LandmarkSectionContent({ landmark, section, evidenceMode, onHotspot }: 
   }
 
   return <SourceList landmark={landmark} />
+}
+
+function ConnectedHeritagePanel({ landmark, evidenceMode }: { landmark: Landmark; evidenceMode: boolean }) {
+  const { t } = useI18n()
+  const [selectedId, setSelectedId] = useState(landmark.relations[0]?.id ?? null)
+  const groups = ['PLACE', 'EVENT', 'PERSON', 'CULTURAL_CONTEXT'] as const
+  return <div className="panel-content connected-content"><h3>{t('connectedHeritage')}</h3><p className="connected-intro">{t('connectedIntro')}</p>{groups.map((type) => {
+    const relations = landmark.relations.filter((relation) => relation.type === type)
+    return relations.length > 0 && <section key={type}><h4>{relationLabel(type, t)}</h4>{relations.map((relation) => <article key={relation.id} data-selected={selectedId === relation.id}><button type="button" aria-pressed={selectedId === relation.id} onClick={() => setSelectedId(relation.id)}><strong>{relation.title}</strong><span>{relationLabel(relation.type, t)}</span></button>{selectedId === relation.id && <p>{relation.summary}<ClaimSources landmark={landmark} claimIds={relation.claimIds} enabled={evidenceMode} /></p>}</article>)}</section>
+  })}</div>
 }
 
 function statusLabel(source: SourceRecord) {

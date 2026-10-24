@@ -26,11 +26,13 @@ const CAMERA_PROFILES = {
 
 export function CameraControls({ landmark, resetNonce, focus, cameraView, command }: CameraControlsProps) {
   const controls = useRef<OrbitControlsImpl>(null)
+  const transitionToken = useRef(0)
   const { camera, size, invalidate } = useThree()
   const portrait = size.height > size.width * 1.08
   const profile = CAMERA_PROFILES[landmark]
 
   useEffect(() => {
+    transitionToken.current += 1
     const position = portrait ? profile.portrait : profile.desktop
     camera.position.set(position[0], position[1], position[2])
     camera.lookAt(profile.target[0], profile.target[1], profile.target[2])
@@ -46,6 +48,7 @@ export function CameraControls({ landmark, resetNonce, focus, cameraView, comman
   }, [camera, invalidate, portrait, profile, resetNonce])
 
   useEffect(() => {
+    const token = ++transitionToken.current
     const destination = focus?.targetCamera ?? (cameraView ? { position: cameraView.position, target: cameraView.target } : null)
     if (!destination || !controls.current) return
     const control = controls.current
@@ -59,6 +62,7 @@ export function CameraControls({ landmark, resetNonce, focus, cameraView, comman
     let frame = 0
 
     const update = (now: number) => {
+      if (token !== transitionToken.current) return
       const progress = duration === 0 ? 1 : Math.min((now - started) / duration, 1)
       const eased = 1 - Math.pow(1 - progress, 3)
       camera.position.lerpVectors(fromPosition, toPosition, eased)
@@ -68,7 +72,7 @@ export function CameraControls({ landmark, resetNonce, focus, cameraView, comman
       if (progress < 1) frame = requestAnimationFrame(update)
     }
     frame = requestAnimationFrame(update)
-    return () => cancelAnimationFrame(frame)
+    return () => { transitionToken.current += 1; cancelAnimationFrame(frame) }
   }, [camera, cameraView, focus, invalidate])
 
   useEffect(() => {
@@ -95,6 +99,7 @@ export function CameraControls({ landmark, resetNonce, focus, cameraView, comman
       maxPolarAngle={Math.PI / 2.08}
       rotateSpeed={0.62}
       zoomSpeed={0.78}
+      onStart={() => { transitionToken.current += 1 }}
       onChange={() => {
         window.__LANDMARK_CAMERA__ = camera.position.toArray()
       }}
