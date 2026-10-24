@@ -4,22 +4,26 @@ import { Monument } from '../landmarks/monas/Monument'
 import { CameraControls } from './CameraControls'
 import { Lighting } from './Lighting'
 import { SceneTelemetry } from './SceneTelemetry'
+import type { CameraView, Hotspot } from '../data/heritage'
+import type { ViewerCommand } from './CameraControls'
 
 interface LandmarkSceneProps {
   onReady: () => void
   resetNonce: number
+  focus?: Hotspot | null
+  cameraView?: CameraView | null
+  command?: ViewerCommand | null
 }
 
-export default function LandmarkScene({ onReady, resetNonce }: LandmarkSceneProps) {
+export default function LandmarkScene({ onReady, resetNonce, focus, cameraView, command }: LandmarkSceneProps) {
   return (
     <>
-      <color attach="background" args={['#d5d6c8']} />
-      <fog attach="fog" args={['#d5d6c8', 26, 48]} />
+      <fog attach="fog" args={['#766445', 25, 48]} />
       <Lighting />
       <DioramaEnvironment />
       <Monument />
-      <ContactShadows position={[0, 0.01, 0]} opacity={0.42} scale={18} blur={2.4} far={15} frames={1} color="#25322a" />
-      <CameraControls resetNonce={resetNonce} />
+      <ContactShadows position={[0, 0.01, 0]} opacity={0.54} scale={18} blur={2.5} far={15} frames={1} color="#111813" />
+      <CameraControls landmark="monas" resetNonce={resetNonce} focus={focus} cameraView={cameraView} command={command} />
       <SceneTelemetry landmark="monas" onReady={onReady} />
     </>
   )

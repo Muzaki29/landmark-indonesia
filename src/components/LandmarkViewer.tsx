@@ -3,6 +3,10 @@ import { Canvas } from '@react-three/fiber'
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import { SceneErrorBoundary } from './SceneErrorBoundary'
 import { ViewerFallback } from './ViewerFallback'
+import { LandmarkHotspots } from './LandmarkHotspots'
+import type { CameraView, Hotspot, Landmark } from '../data/heritage'
+import type { ExploreMode } from '../state/experienceState'
+import type { ViewerCommand } from '../scenes/CameraControls'
 
 const landmarkScenes = {
   monas: lazy(() => import('../scenes/LandmarkScene')),
@@ -20,15 +24,20 @@ function supportsWebGL() {
 }
 
 interface LandmarkViewerProps {
-  landmarkSlug: keyof typeof landmarkScenes
-  landmarkName: string
+  landmark: Landmark
   onReady: () => void
   resetNonce: number
+  mode: ExploreMode
+  activeHotspot: Hotspot | null
+  onHotspot: (id: string) => void
+  cameraView: CameraView | null
+  command: ViewerCommand | null
+  labels: boolean
 }
 
-export function LandmarkViewer({ landmarkSlug, landmarkName, onReady, resetNonce }: LandmarkViewerProps) {
+export function LandmarkViewer({ landmark, onReady, resetNonce, mode, activeHotspot, onHotspot, cameraView, command, labels }: LandmarkViewerProps) {
   const [webglSupported] = useState(supportsWebGL)
-  const LandmarkScene = landmarkScenes[landmarkSlug]
+  const LandmarkScene = landmarkScenes[landmark.slug]
 
   if (!webglSupported) return <ViewerFallback />
 
@@ -39,17 +48,18 @@ export function LandmarkViewer({ landmarkSlug, landmarkName, onReady, resetNonce
         dpr={[1, 1.5]}
         frameloop="demand"
         camera={{ fov: 36, near: 0.1, far: 80, position: [19.5, 15.5, 22] }}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         fallback={<ViewerFallback />}
         onCreated={({ gl }) => {
           gl.outputColorSpace = SRGBColorSpace
           gl.toneMapping = ACESFilmicToneMapping
           gl.toneMappingExposure = 1.05
         }}
-        aria-label={`Interactive 3D miniature of ${landmarkName}`}
+        aria-label={`Interactive 3D miniature of ${landmark.name}`}
       >
         <Suspense fallback={null}>
-          <LandmarkScene onReady={onReady} resetNonce={resetNonce} />
+          <LandmarkScene onReady={onReady} resetNonce={resetNonce} focus={activeHotspot} cameraView={cameraView} command={command} />
+          <LandmarkHotspots hotspots={landmark.hotspots} activeId={activeHotspot?.id} visible={mode === 'architecture' || labels} labels={labels} onSelect={onHotspot} />
         </Suspense>
       </Canvas>
     </SceneErrorBoundary>

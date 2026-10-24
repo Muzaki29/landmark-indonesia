@@ -11,6 +11,13 @@
   --muted: rgba(243, 240, 230, 0.66);
   --line: rgba(243, 240, 230, 0.28);
   --accent: #d7ae4f;
+  --forest-950: #0b1410;
+  --forest-900: #101c17;
+  --forest-800: #1a2922;
+  --heritage-gold: #d1a252;
+  --heritage-gold-soft: rgba(209, 162, 82, 0.2);
+  --paper: #f2ead9;
+  --stone: #b5aa96;
 }
 
 * {

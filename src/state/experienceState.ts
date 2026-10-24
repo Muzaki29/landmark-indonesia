@@ -1,11 +1,14 @@
-export type LandmarkSection = 'overview' | 'history' | 'architecture' | 'timeline' | 'sources'
-export type ExperiencePanel = 'explore' | 'about' | 'collection-sources' | LandmarkSection | null
+export type LandmarkSection = 'overview' | 'history' | 'architecture' | 'timeline' | 'cultural-context' | 'connected-heritage' | 'sources'
+export type ExperiencePanel = 'explore' | 'compare' | 'about' | 'collection-sources' | LandmarkSection | null
+export type ExploreMode = 'explore' | 'architecture' | 'history'
 
 export const landmarkSections: { id: LandmarkSection; label: string }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'history', label: 'History' },
   { id: 'architecture', label: 'Architecture' },
   { id: 'timeline', label: 'Timeline' },
+  { id: 'cultural-context', label: 'Cultural Context' },
+  { id: 'connected-heritage', label: 'Connected Heritage' },
   { id: 'sources', label: 'Sources' },
 ]
 
