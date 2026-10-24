@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { canDisplayArchiveAsset, furtherReadings, getClaims, getFurtherReadings, getProvinces, getSourcesForClaims, provinces, searchLandmarks } from './heritage'
+import { canDisplayArchiveAsset, canUseArchiveAsBlueprint, furtherReadings, getClaims, getFurtherReadings, getProvinces, getSourcesForClaims, provinces, searchLandmarks } from './heritage'
 import { indonesianLandmarkCopy } from './heritage.id'
 
 describe('heritage collection data', () => {
@@ -62,8 +62,13 @@ describe('heritage collection data', () => {
     for (const { landmark } of provinces) {
       expect(landmark.archive).not.toHaveLength(0)
       expect(landmark.archive.every((item) => item.rightsStatus === 'EXTERNAL_REFERENCE_ONLY' && !canDisplayArchiveAsset(item))).toBe(true)
-      expect(landmark.inspectionCapabilities.blueprint.classification).toBe('MODEL_STUDY')
-      expect(landmark.inspectionCapabilities.sectionCut.status).toBe('LIMITED')
+      expect(landmark.archive.every((item) => !canUseArchiveAsBlueprint(item))).toBe(true)
+      expect(landmark.inspectionCapabilities.display.real.status).toBe('AVAILABLE')
+      expect(landmark.inspectionCapabilities.display.clay.status).toBe('AVAILABLE')
+      expect(landmark.inspectionCapabilities.display.xray.status).toBe('LIMITED')
+      expect(landmark.inspectionCapabilities.inspection.sectionCut.status).toBe('LIMITED')
     }
+    expect(provinces[0].landmark.inspectionCapabilities.display.blueprint.classification).toBe('MODEL_STUDY')
+    expect(provinces.slice(1).every(({ landmark }) => landmark.inspectionCapabilities.display.blueprint.status === 'UNAVAILABLE')).toBe(true)
   })
 })

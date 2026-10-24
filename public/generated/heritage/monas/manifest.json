@@ -1,7 +1,7 @@
 {
   "landmarkId": "monas",
   "modelVersion": "1.0.0",
-  "generatedAt": "2026-10-24T01:51:46Z",
+  "generatedAt": "2026-10-24T02:10:53Z",
   "sourceType": "GENERATED",
   "geometry": {
     "runtime": "src/landmarks/monas/Monument.tsx",
@@ -51,7 +51,7 @@
       "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
       "modelVersion": "1.0.0",
       "classification": "MODEL_STUDY",
-      "generatedAt": "2026-10-24T01:51:46Z",
+      "generatedAt": "2026-10-24T02:10:53Z",
       "verifiedDimensionReferences": [
         "totalHeight",
         "flameHeight",
@@ -69,7 +69,7 @@
       "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
       "modelVersion": "1.0.0",
       "classification": "MODEL_STUDY",
-      "generatedAt": "2026-10-24T01:51:46Z",
+      "generatedAt": "2026-10-24T02:10:53Z",
       "verifiedDimensionReferences": [
         "totalHeight",
         "flameHeight",
@@ -87,7 +87,7 @@
       "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
       "modelVersion": "1.0.0",
       "classification": "MODEL_STUDY",
-      "generatedAt": "2026-10-24T01:51:46Z",
+      "generatedAt": "2026-10-24T02:10:53Z",
       "verifiedDimensionReferences": [
         "totalHeight",
         "flameHeight",
@@ -107,7 +107,7 @@
       "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
       "modelVersion": "1.0.0",
       "classification": "MODEL_STUDY",
-      "generatedAt": "2026-10-24T01:51:46Z",
+      "generatedAt": "2026-10-24T02:10:53Z",
       "verifiedDimensionReferences": [
         "totalHeight",
         "flameHeight",
@@ -125,7 +125,7 @@
       "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
       "modelVersion": "1.0.0",
       "classification": "MODEL_STUDY",
-      "generatedAt": "2026-10-24T01:51:46Z",
+      "generatedAt": "2026-10-24T02:10:53Z",
       "verifiedDimensionReferences": [
         "totalHeight",
         "flameHeight",
@@ -143,7 +143,7 @@
       "generatedFrom": "tools/heritage_pipeline/data/monas/heritage-model.json",
       "modelVersion": "1.0.0",
       "classification": "MODEL_STUDY",
-      "generatedAt": "2026-10-24T01:51:46Z",
+      "generatedAt": "2026-10-24T02:10:53Z",
       "verifiedDimensionReferences": [
         "totalHeight",
         "flameHeight",
@@ -155,6 +155,24 @@
       }
     }
   ],
+  "displayModes": {
+    "real": {
+      "capability": "AVAILABLE",
+      "classification": "INTERPRETIVE_MODEL"
+    },
+    "clay": {
+      "capability": "AVAILABLE",
+      "classification": "INTERPRETIVE_MODEL"
+    },
+    "xray": {
+      "capability": "LIMITED",
+      "reason": "NO_MEANINGFUL_INTERIOR_GEOMETRY"
+    },
+    "blueprint": {
+      "capability": "AVAILABLE",
+      "classification": "MODEL_STUDY"
+    }
+  },
   "inspection": {
     "xrayCapability": "LIMITED",
     "sectionCutCapability": "LIMITED",

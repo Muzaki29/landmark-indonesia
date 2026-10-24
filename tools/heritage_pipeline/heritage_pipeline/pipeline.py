@@ -87,6 +87,7 @@ def model_study_metadata(model: dict[str, Any], view: str, asset: str, generated
 
 def build_manifest(model: dict[str, Any], studies: list[dict[str, Any]], validation: dict[str, Any], generated_at: str | None = None) -> dict[str, Any]:
     generated_at = generated_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    inspection = model["inspection"]
     return {
         "landmarkId": model["landmarkId"],
         "modelVersion": model["modelVersion"],
@@ -102,6 +103,12 @@ def build_manifest(model: dict[str, Any], studies: list[dict[str, Any]], validat
         "textures": [],
         "elevationViews": studies,
         "blueprintViews": studies,
+        "displayModes": {
+            "real": {"capability": "AVAILABLE", "classification": "INTERPRETIVE_MODEL"},
+            "clay": {"capability": "AVAILABLE", "classification": "INTERPRETIVE_MODEL"},
+            "xray": {"capability": inspection.get("xrayCapability", "UNAVAILABLE"), "reason": "NO_MEANINGFUL_INTERIOR_GEOMETRY" if not inspection.get("meaningfulInteriorGeometry") else None},
+            "blueprint": {"capability": inspection.get("blueprintCapability", "UNAVAILABLE"), "classification": inspection.get("blueprintClassification", "UNAVAILABLE")},
+        },
         "inspection": model["inspection"],
         "validation": validation,
     }

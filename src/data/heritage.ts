@@ -1,3 +1,5 @@
+import type { DisplayMode } from '../state/experienceState'
+
 export type SourceStatus = 'verified' | 'further-reading'
 export type VerificationStatus = 'VERIFIED' | 'SUPPORTED' | 'DISPUTED' | 'UNVERIFIED' | 'FURTHER_READING'
 export type InspectionStatus = 'AVAILABLE' | 'LIMITED' | 'UNAVAILABLE'
@@ -12,9 +14,8 @@ export interface InspectionCapability {
 }
 
 export interface InspectionCapabilities {
-  xray: InspectionCapability
-  sectionCut: InspectionCapability
-  blueprint: InspectionCapability & { classification: 'DOCUMENTED' | 'MODEL_STUDY' | 'UNAVAILABLE' }
+  display: Record<DisplayMode, InspectionCapability & { classification?: 'INTERPRETIVE_MODEL' | 'MODEL_STUDY' | 'UNAVAILABLE' }>
+  inspection: { sectionCut: InspectionCapability }
 }
 
 export interface ArchiveItem {
@@ -36,6 +37,7 @@ export interface ArchiveItem {
   claimIds?: string[]
   verificationStatus: Exclude<VerificationStatus, 'FURTHER_READING'>
   thenAndNowPairId?: string
+  visualizationEligibility?: { blueprint?: boolean; thenNow?: boolean; viewerReference?: boolean }
 }
 
 export interface SourceRecord {
@@ -266,32 +268,45 @@ const nationalHeritageJamSource: SourceRecord = {
   url: 'https://budaya.data.kemdikbud.go.id/cagarbudaya/objek/KB000809',
 }
 
-const limitedInspection = (evidenceIds: string[]): InspectionCapabilities => ({
-  xray: {
+const limitedInspection = (evidenceIds: string[], blueprint = false): InspectionCapabilities => ({
+  display: {
+    real: {
+      status: 'AVAILABLE', classification: 'INTERPRETIVE_MODEL', evidenceIds,
+      description: { en: 'The accepted interpretive scene with its original materials and lighting.', id: 'Adegan interpretatif yang disetujui dengan material dan pencahayaan aslinya.' },
+    },
+    clay: {
+      status: 'AVAILABLE', classification: 'INTERPRETIVE_MODEL', evidenceIds,
+      description: { en: 'A warm material study of the same interpretive geometry.', id: 'Studi material hangat dari geometri interpretatif yang sama.' },
+    },
+    xray: {
     status: 'LIMITED',
     description: {
       en: 'Exterior opacity can be reduced, but the interpretive model contains no verified internal construction to reveal.',
       id: 'Opasitas bagian luar dapat dikurangi, tetapi model interpretatif ini tidak memuat konstruksi internal terverifikasi untuk ditampilkan.',
     },
     evidenceIds,
+    },
+    blueprint: {
+      status: blueprint ? 'AVAILABLE' : 'UNAVAILABLE',
+      classification: blueprint ? 'MODEL_STUDY' : 'UNAVAILABLE',
+      description: blueprint ? {
+        en: 'Orthographic views are derived from the interpretive 3D model, not an original architectural drawing.',
+        id: 'Tampilan ortografis berasal dari model 3D interpretatif, bukan gambar arsitektur asli.',
+      } : {
+        en: 'No provenance-aware model study is published for this landmark.',
+        id: 'Belum ada studi model berbasis provenans yang diterbitkan untuk landmark ini.',
+      },
+      evidenceIds,
+    },
   },
-  sectionCut: {
+  inspection: { sectionCut: {
     status: 'LIMITED',
     description: {
       en: 'The clipping plane studies modeled geometry only. It is not evidence of authentic internal construction.',
       id: 'Bidang potong hanya mempelajari geometri model. Tampilan ini bukan bukti konstruksi internal yang autentik.',
     },
     evidenceIds,
-  },
-  blueprint: {
-    status: 'AVAILABLE',
-    classification: 'MODEL_STUDY',
-    description: {
-      en: 'Orthographic views are derived from the interpretive 3D model, not an original architectural drawing.',
-      id: 'Tampilan ortografis berasal dari model 3D interpretatif, bukan gambar arsitektur asli.',
-    },
-    evidenceIds,
-  },
+  } },
 })
 
 export const furtherReadings: FurtherReading[] = [
@@ -382,7 +397,7 @@ const monas: Landmark = {
     architecturalForm: { value: 'Obelisk with flame', claimIds: ['monas-structure'] },
   },
   modelNote: 'Procedural interpretive model. Verified overall dimensions are retained; surrounding landscape details are visual approximations.',
-  inspectionCapabilities: limitedInspection(['monas-structure', 'monas-height']),
+  inspectionCapabilities: limitedInspection(['monas-structure', 'monas-height'], true),
   archive: [{
     id: 'monas-official-documentation', landmarkId: 'landmark-monas', type: 'OFFICIAL_ARCHIVE',
     title: { en: 'Official Monumen Nasional documentation', id: 'Dokumentasi resmi Monumen Nasional' },
@@ -619,6 +634,10 @@ export function getSourcesForClaims(landmark: Landmark, claimIds: string[]) {
 
 export function canDisplayArchiveAsset(item: ArchiveItem) {
   return Boolean(item.asset && ['PUBLIC_DOMAIN', 'OPEN_LICENSE', 'PERMISSION_GRANTED'].includes(item.rightsStatus))
+}
+
+export function canUseArchiveAsBlueprint(item: ArchiveItem) {
+  return item.type === 'ARCHITECTURAL_DRAWING' && item.visualizationEligibility?.blueprint === true && canDisplayArchiveAsset(item)
 }
 
 export function searchLandmarks(query: string, collection = provinces) {

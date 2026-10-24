@@ -45,6 +45,8 @@ class PipelineTests(unittest.TestCase):
         serialized = json.dumps(manifest)
         self.assertNotIn(":\\", serialized)
         self.assertEqual(manifest["geometry"]["migrationDecision"], "KEEP_PROCEDURAL_R3F")
+        self.assertEqual(manifest["displayModes"]["real"]["capability"], "AVAILABLE")
+        self.assertEqual(manifest["displayModes"]["xray"]["capability"], "UNAVAILABLE")
 
     def test_missing_and_invalid_glb_fail_cleanly(self):
         with tempfile.TemporaryDirectory() as directory:

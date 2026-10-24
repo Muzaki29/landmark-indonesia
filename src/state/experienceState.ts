@@ -1,7 +1,8 @@
 export type LandmarkSection = 'overview' | 'history' | 'architecture' | 'timeline' | 'cultural-context' | 'connected-heritage' | 'archive' | 'sources'
 export type ExperiencePanel = 'explore' | 'compare' | 'about' | 'collection-sources' | LandmarkSection | null
 export type ExploreMode = 'explore' | 'architecture' | 'history'
-export type InspectionMode = 'explore' | 'xray' | 'section-cut' | 'blueprint'
+export type DisplayMode = 'real' | 'clay' | 'xray' | 'blueprint'
+export type BlueprintView = 'FRONT' | 'SIDE' | 'TOP'
 
 export const landmarkSections: { id: LandmarkSection; label: string }[] = [
   { id: 'overview', label: 'Overview' },
